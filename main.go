@@ -7,6 +7,10 @@ import (
     "os"
 
     // External libraries
+    // gitlab
+    // mine
+    "gitlab.com/nolim1t/golang-httpd-test/common"
+    // github
     "github.com/gin-gonic/gin"
     "github.com/gin-contrib/cors"
     "github.com/gin-contrib/gzip"
@@ -15,6 +19,7 @@ import (
 // Globals
 var (
     version, gitHash string
+    conf    common.Config
     showVersion    = flag.Bool("version", false, "Show version and exit")
 )
 
