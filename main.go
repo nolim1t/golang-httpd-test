@@ -3,6 +3,8 @@ package main
 import (
     // System Libraries
     "fmt"
+    "flag"
+    "os"
 
     // External libraries
     "github.com/gin-gonic/gin"
@@ -10,6 +12,28 @@ import (
     "github.com/gin-contrib/gzip"
 )
 
+// Globals
+var (
+    version, gitHash string
+    showVersion    = flag.Bool("version", false, "Show version and exit")
+)
+
+// Functions
+
+// Init function
+func init() {
+    flag.Parse()
+    versionString := "debug"
+
+    if version != "" && gitHash != "" {
+        versionString = fmt.Sprintf("%s (git: %s)", version, gitHash)
+    }
+
+    if *showVersion {
+        fmt.Println(versionString)
+        os.Exit(0)
+    }
+}
 
 func info(c *gin.Context) {
     c.JSON(200, gin.H{
@@ -17,6 +41,7 @@ func info(c *gin.Context) {
     })
 }
 
+// Main entrypoint
 func main() {
     router := gin.Default()
     router.Use(cors.New(cors.Config{
