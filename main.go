@@ -53,7 +53,7 @@ func info(c *gin.Context) {
 
 // Main entrypoint
 func main() {
-    fmt.Print(proto.BatteryPathName)
+    fmt.Print(pineclient.BatteryPathName)
 
     router := gin.Default()
     router.Use(cors.New(cors.Config{
