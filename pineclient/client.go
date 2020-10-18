@@ -8,7 +8,7 @@ const (
 )
 
 // Methods
-func getStatus() (string) {
+func GetStatus() (string) {
     var status = "1"
 
     return status

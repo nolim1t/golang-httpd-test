@@ -51,10 +51,14 @@ func info(c *gin.Context) {
     })
 }
 
+func batStatus(c *gin.Context) {
+    c.JSON(200, gin.H{
+        "message": pineclient.GetStatus(),
+    })
+}
+
 // Main entrypoint
 func main() {
-    fmt.Print(pineclient.BatteryPathName)
-
     router := gin.Default()
     router.Use(cors.New(cors.Config{
         AllowOrigins:     []string{"https://nolim1t.co"},
@@ -65,6 +69,7 @@ func main() {
 
     r := router.Group("/api")
     r.GET("/info", info)
+    r.GET("/batteryStatus", batStatus)
 
     err := router.Run(fmt.Sprintf(":%d", 3000))
     if err != nil {
