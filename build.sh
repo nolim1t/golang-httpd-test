@@ -10,6 +10,7 @@ export LDFLAGS="-s -w -buildid= -X main.version=${VERSION}"
 
 
 go build  -x  -v  -trimpath \
+    -mod=readonly \
     -tags="${TAGS}" \
     -ldflags="${LDFLAGS} \
     -X main.gitHash=${GIT_HASH}" \
