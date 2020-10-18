@@ -50,6 +50,7 @@ func info(c *gin.Context) {
 
 // Main entrypoint
 func main() {
+    fmt.Print(proto.BatteryPathName)
     fmt.Print(proto.getStatus())
 
     router := gin.Default()
