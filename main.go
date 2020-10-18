@@ -10,6 +10,8 @@ import (
     // gitlab
     // mine
     "gitlab.com/nolim1t/golang-httpd-test/common"
+    "gitlab.com/nolim1t/golang-httpd-test/proto"
+
     // github
     "github.com/gin-gonic/gin"
     "github.com/gin-contrib/cors"
@@ -48,6 +50,8 @@ func info(c *gin.Context) {
 
 // Main entrypoint
 func main() {
+    fmt.Print(proto.getStatus())
+
     router := gin.Default()
     router.Use(cors.New(cors.Config{
         AllowOrigins:     []string{"https://nolim1t.co"},

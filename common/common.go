@@ -1,10 +1,12 @@
 package common
 
+/*
 import (
 	"time"
 
 	"github.com/pelletier/go-toml"
 )
+*/
 
 const (
 	DefaultConfigDir  = "~/.lncm/"
