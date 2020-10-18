@@ -69,6 +69,16 @@ func batCapacity(c *gin.Context) {
         "percent": pineclient.GetCapacity(),
     })
 }
+func cpuTemp(c *gin.Context) {
+    c.JSON(200, gin.H{
+        "cputemp": pineclient.GetCPUTemp(),
+    })
+}
+func gpuTemp(c *gin.Context) {
+    c.JSON(200, gin.H{
+        "gputemp": pineclient.GetGPUTemp(),
+    })
+}
 // Main entrypoint
 func main() {
     router := gin.Default()
@@ -84,6 +94,8 @@ func main() {
     // Pinephone stuff
     r.GET("/batteryStatus", batStatus)
     r.GET("/batteryCapacity", batCapacity)
+    r.GET("/cpuTemp", cpuTemp)
+    r.GET("/gpuTemp", gpuTemp)
 
     err := router.Run(fmt.Sprintf(":%d", 3000))
     if err != nil {
