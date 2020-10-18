@@ -53,10 +53,15 @@ func info(c *gin.Context) {
 
 func batStatus(c *gin.Context) {
     c.JSON(200, gin.H{
-        "message": pineclient.GetStatus(),
+        "status": pineclient.GetStatus(),
     })
 }
 
+func batCapacity(c *gin.Context) {
+    c.JSON(200, gin.H{
+        "percent": pineclient.GetCapacity(),
+    })
+}
 // Main entrypoint
 func main() {
     router := gin.Default()
@@ -69,7 +74,9 @@ func main() {
 
     r := router.Group("/api")
     r.GET("/info", info)
+    // Pinephone stuff
     r.GET("/batteryStatus", batStatus)
+    r.GET("/batteryCapacity", batCapacity)
 
     err := router.Run(fmt.Sprintf(":%d", 3000))
     if err != nil {
