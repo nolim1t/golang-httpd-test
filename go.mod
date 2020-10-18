@@ -1,4 +1,4 @@
-module gitlab.com/nolim1t/http-api
+module gitlab.com/nolim1t/golang-httpd-test
 
 go 1.15
 
