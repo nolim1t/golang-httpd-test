@@ -1,4 +1,4 @@
-package proto
+package pineclient
 
 // Some sample pathnames (this pertains to my pinephone)
 const (
@@ -7,8 +7,10 @@ const (
     BatteryCapacity = BatteryPathName + "/capacity"
 )
 
+// Methods
 func getStatus() (string) {
     var status = "1"
 
     return status
 }
+

@@ -10,7 +10,8 @@ import (
     // gitlab
     // mine
     "gitlab.com/nolim1t/golang-httpd-test/common"
-    "gitlab.com/nolim1t/golang-httpd-test/proto"
+    // pinephone client
+    "gitlab.com/nolim1t/golang-httpd-test/pineclient"
 
     // github
     "github.com/gin-gonic/gin"
@@ -23,7 +24,9 @@ var (
     version, gitHash string
     conf    common.Config
     showVersion    = flag.Bool("version", false, "Show version and exit")
+
 )
+
 
 // Functions
 
@@ -51,7 +54,6 @@ func info(c *gin.Context) {
 // Main entrypoint
 func main() {
     fmt.Print(proto.BatteryPathName)
-    fmt.Print(proto.getStatus())
 
     router := gin.Default()
     router.Use(cors.New(cors.Config{
