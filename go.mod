@@ -1,6 +1,6 @@
 module gitlab.com/nolim1t/http-api
 
-go 1.15.2
+go 1.15
 
 require (
     github.com/gin-gonic/gin v1.6.3
