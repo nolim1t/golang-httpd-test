@@ -9,9 +9,10 @@ import (
 type (
     Config struct {
         // Port the service will run on
-        Port int64 `toml:"port"`
-        LogFile string `toml:"log-file"`
-        OffChainOnly bool `toml:"disable-pinephone-binding"`
+        Port int64 `toml:"port"` // the port to run on
+        StaticDir string `toml:"static-dir"` // Where index.html lives
+        LogFile string `toml:"log-file"` // logfile to log
+        DisablePinephoneBinding bool `toml:"disable-pinephone-binding"`
     }
 )
 
