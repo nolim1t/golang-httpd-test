@@ -14,6 +14,7 @@ import (
     "fmt"
     "flag"
     "os"
+    "path"
 
     // External libraries
     // mine
@@ -142,6 +143,18 @@ func main() {
     if conf.Port == 0 {
         conf.Port = 8080
     }
+    var staticFilePath string
+    if conf.StaticDir != "" {
+        staticFilePath = path.Join(conf.StaticDir, "index.html")
+        fmt.Println(conf.StaticDir)
+        fmt.Println(staticFilePath)
+        router.StaticFile("/", staticFilePath)
+    }
+    log.WithFields(log.Fields{
+        "routes":      common.FormatRoutes(router.Routes()),
+        "port":        conf.Port,
+        "static-file": staticFilePath,
+    }).Println("gin router defined")
     err := router.Run(fmt.Sprintf(":%d", conf.Port))
 
     if err != nil {
