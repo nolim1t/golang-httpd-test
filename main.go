@@ -25,6 +25,9 @@ import (
     "github.com/gin-contrib/cors"
     "github.com/gin-contrib/gzip"
     "github.com/pelletier/go-toml"
+    log "github.com/sirupsen/logrus"
+    // non-github
+    "gopkg.in/natefinch/lumberjack.v2"
 )
 
 // Globals
@@ -32,7 +35,7 @@ var (
     version, gitHash string
     conf    common.Config
     showVersion    = flag.Bool("version", false, "Show version and exit")
-
+    configFilePath = flag.String("config", common.DefaultConfigFile, "Path to a config file in TOML format")
 )
 
 
@@ -50,6 +53,39 @@ func init() {
     if *showVersion {
         fmt.Println(versionString)
         os.Exit(0)
+    }
+    log.SetFormatter(&log.TextFormatter{
+        FullTimestamp: true,
+    })
+    // Load configfile
+    configFile, err := toml.LoadFile(common.CleanAndExpandPath(*configFilePath))
+    // Config file
+    if err != nil {
+        panic(fmt.Errorf("unable to load %s:\n\t%w", *configFilePath, err))
+    }
+    err = configFile.Unmarshal(&conf)
+    if err != nil {
+        panic(fmt.Errorf("unable to process %s:\n\t%w", *configFilePath, err))
+    }
+    // set up logfile
+    if conf.LogFile == "" {
+        conf.LogFile = common.DefaultLogFile
+    }
+    fields := log.Fields{
+        "version":   versionString,
+        "log-file": conf.LogFile,
+        "conf-file": *configFilePath,
+    }
+    if conf.LogFile != "none" {
+        log.SetOutput(&lumberjack.Logger{
+            Filename:  common.CleanAndExpandPath(conf.LogFile),
+            LocalTime: true,
+            Compress: true,
+        })
+        log.SetFormatter(&log.JSONFormatter{
+            PrettyPrint: false, // so 'jq' always works in 'tail -f'
+        })
+        log.WithFields(fields).Println("server started")
     }
 }
 // Test endpoint
@@ -92,11 +128,7 @@ func gpuTemp(c *gin.Context) {
 // Main entrypoint
 func main() {
     router := gin.Default()
-    router.Use(cors.New(cors.Config{
-        AllowOrigins:     []string{"https://nolim1t.co"},
-        AllowHeaders:     []string{"Origin"},
-        ExposeHeaders:    []string{"Content-Length"},
-    }))
+    router.Use(cors.Default())
     router.Use(gzip.Gzip(gzip.DefaultCompression))
 
     r := router.Group("/api")
@@ -107,8 +139,11 @@ func main() {
     r.GET("/batteryCapacity", batCapacity)
     r.GET("/cpuTemp", cpuTemp)
     r.GET("/gpuTemp", gpuTemp)
+    if conf.Port == 0 {
+        conf.Port = 8080
+    }
+    err := router.Run(fmt.Sprintf(":%d", conf.Port))
 
-    err := router.Run(fmt.Sprintf(":%d", 3000))
     if err != nil {
         panic(err)
     }
