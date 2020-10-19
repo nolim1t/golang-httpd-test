@@ -24,6 +24,7 @@ import (
     "github.com/gin-gonic/gin"
     "github.com/gin-contrib/cors"
     "github.com/gin-contrib/gzip"
+    "github.com/pelletier/go-toml"
 )
 
 // Globals
