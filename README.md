@@ -18,7 +18,7 @@ Eventually, I'd like to use this for querying external based libraries (such as 
 
 ## TODO
 
-- [ ] Configuration File support 
+- [x] Configuration File support 
 - [ ] Static Directory serving
 - [ ] Toggle between dev and production mode
 - [ ] `Dockerfile` support
