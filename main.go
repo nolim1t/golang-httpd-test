@@ -51,13 +51,22 @@ func init() {
         os.Exit(0)
     }
 }
-
+// Test endpoint
 func info(c *gin.Context) {
     c.JSON(200, gin.H{
         "message": "pong",
     })
 }
-
+// index endpoint
+func apiList(c *gin.Context) {
+    names := []string{"/api/batteryStatus", "/api/batteryCapacity", "/api/cpuTemp","/api/gpuTemp"}
+    var listoutput struct {
+        List    []string
+    }
+    listoutput.List = names
+    c.JSON(200, listoutput)
+}
+// PinePhone Endpoints
 func batStatus(c *gin.Context) {
     c.JSON(200, gin.H{
         "status": pineclient.GetStatus(),
@@ -90,6 +99,7 @@ func main() {
     router.Use(gzip.Gzip(gzip.DefaultCompression))
 
     r := router.Group("/api")
+    r.GET("/", apiList)
     r.GET("/info", info)
     // Pinephone stuff
     r.GET("/batteryStatus", batStatus)
