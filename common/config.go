@@ -5,5 +5,6 @@ type (
         // Port the service will run on
         Port int64 `toml:"port"`
         LogFile string `toml:"log-file"`
+        OffChainOnly bool `toml:"disable-pinephone-binding"`
     }
 )
