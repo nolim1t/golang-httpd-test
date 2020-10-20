@@ -11,45 +11,43 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 // Define imports
 import (
-    "fmt"
-    "strconv"
+	"fmt"
+	"strconv"
 )
 
 // Define Constants (Accessible from outside this package)
 const (
-    ThermalsBasePath = "/sys/class/thermal"
-    CPUBasePath = ThermalsBasePath + "/thermal_zone0"
-    GPUBasePath = ThermalsBasePath + "/thermal_zone1"
-    CPUTemp = CPUBasePath + "/temp"
-    GPUTemp = GPUBasePath + "/temp"
+	ThermalsBasePath = "/sys/class/thermal"
+	CPUBasePath      = ThermalsBasePath + "/thermal_zone0"
+	GPUBasePath      = ThermalsBasePath + "/thermal_zone1"
+	CPUTemp          = CPUBasePath + "/temp"
+	GPUTemp          = GPUBasePath + "/temp"
 )
 
 // Static Methods
 // CPU Temp (-1 if file not present, -2 if conversion error, or CPU temperature)
-func GetCPUTemp() (string) {
-    return gettemp("CPU")
+func GetCPUTemp() string {
+	return gettemp("CPU")
 }
-func GetGPUTemp() (string) {
-    return gettemp("GPU")
-}
-
-func gettemp(thermalclass string) (string) {
-    var temp = "-3"
-    if (thermalclass == "GPU") {
-        temp = stringtofile(GPUTemp)
-    } else {
-        temp = stringtofile(CPUTemp)
-    }
-    if temp  == "-1" {
-        return temp
-    } else {
-        tempint, err := strconv.Atoi(temp)
-        if err != nil {
-            return "-2"
-        } else {
-            return fmt.Sprintf("%d", (tempint/1000))
-        }
-    }
+func GetGPUTemp() string {
+	return gettemp("GPU")
 }
 
-
+func gettemp(thermalclass string) string {
+	var temp = "-3"
+	if thermalclass == "GPU" {
+		temp = stringtofile(GPUTemp)
+	} else {
+		temp = stringtofile(CPUTemp)
+	}
+	if temp == "-1" {
+		return temp
+	} else {
+		tempint, err := strconv.Atoi(temp)
+		if err != nil {
+			return "-2"
+		} else {
+			return fmt.Sprintf("%d", (tempint / 1000))
+		}
+	}
+}

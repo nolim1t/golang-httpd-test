@@ -11,35 +11,35 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 // Define imports
 import (
-    "fmt"
-    "io/ioutil"
-    "strings"
+	"fmt"
+	"io/ioutil"
+	"strings"
 )
 
 // Define Constants (Accessible from outside this package)
 const (
-    BatteryPathName = "/sys/class/power_supply/axp20x-battery"
-    BatteryIsPresent = BatteryPathName + "/present"
-    BatteryCapacity = BatteryPathName + "/capacity"
+	BatteryPathName  = "/sys/class/power_supply/axp20x-battery"
+	BatteryIsPresent = BatteryPathName + "/present"
+	BatteryCapacity  = BatteryPathName + "/capacity"
 )
+
 // Local methods
 func stringtofile(filename string) string {
-    byte_output, err := ioutil.ReadFile(filename)
-    if err == nil {
-        return strings.Trim(string(byte_output), "\n")
-    } else {
-        return "-1"
-    }
+	byte_output, err := ioutil.ReadFile(filename)
+	if err == nil {
+		return strings.Trim(string(byte_output), "\n")
+	} else {
+		return "-1"
+	}
 }
 
 // Static Methods
 // Status of Battery (-1 if file not present, 0 if battery not present, 1 if battery is present)
-func GetStatus() (string) {
-    return stringtofile(BatteryIsPresent)
+func GetStatus() string {
+	return stringtofile(BatteryIsPresent)
 }
 
 // Capacity of Battery (-1 if file not present, or percentage)
-func GetCapacity() (string) {
-    return fmt.Sprintf("%s", stringtofile(BatteryCapacity))
+func GetCapacity() string {
+	return fmt.Sprintf("%s", stringtofile(BatteryCapacity))
 }
-
