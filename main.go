@@ -160,7 +160,7 @@ func main() {
 		staticFilePath = path.Join(conf.StaticDir, "index.html")
 		fmt.Println(conf.StaticDir)
 		fmt.Println(staticFilePath)
-		router.StaticFile("/", staticFilePath)
+		router.StaticFile("/", common.CleanAndExpandPath(staticFilePath))
 	}
 	log.WithFields(log.Fields{
 		"routes":      common.FormatRoutes(router.Routes()),
