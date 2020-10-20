@@ -121,6 +121,20 @@ func gpuTemp(c *gin.Context) {
 	})
 }
 
+// querystring test
+func testQueryString(c *gin.Context) {
+	param1 := c.DefaultQuery("param1", "none")
+	if param1 == "none" {
+		c.JSON(200, gin.H{
+			"message": "show this message if there is no query string",
+		})
+	} else {
+		c.JSON(200, gin.H{
+			"message": param1,
+		})
+	}
+}
+
 // Main entrypoint
 func main() {
 	router := gin.Default()
@@ -132,6 +146,7 @@ func main() {
 		c.JSON(200, common.FormatRoutes(router.Routes()))
 	})
 	r.GET("/info", info)
+	r.GET("/test", testQueryString)
 	// Pinephone stuff
 	r.GET("/batteryStatus", batStatus)
 	r.GET("/batteryCapacity", batCapacity)
