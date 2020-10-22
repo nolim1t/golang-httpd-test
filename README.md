@@ -1,6 +1,8 @@
 # Test GoLang HTTPD
 ![Golang Gopher](https://gitlab.com/nolim1t/golang-httpd-test/-/raw/master/golang.png)
 
+[![pipeline status](https://gitlab.com/nolim1t/golang-httpd-test/badges/master/pipeline.svg)](https://gitlab.com/nolim1t/golang-httpd-test/-/commits/master) 
+
 ## About
 
 The purpose of this project is purely for learning how go build interfaces and a HTTPD API server in GOLANG.
