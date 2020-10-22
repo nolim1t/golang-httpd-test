@@ -5,8 +5,7 @@
 [![Build on tag](https://github.com/nolim1t/golang-httpd-test/workflows/Docker%20build%20on%20tag/badge.svg)](https://github.com/nolim1t/golang-httpd-test/actions?query=workflow%3A%22Docker+build+on+tag%22)
 [![Build on push](https://github.com/nolim1t/golang-httpd-test/workflows/Docker%20build%20on%20push/badge.svg)](https://github.com/nolim1t/golang-httpd-test/actions?query=workflow%3A%22Docker+build+on+push%22)
 ![Version](https://img.shields.io/github/v/release/nolim1t/golang-httpd-test?sort=semver) 
-[![Docker Pulls Count](https://img.shields.io/docker/pulls/nolim1t/golang-httpd-test.svg?style=flat)](https://hub.docker.com/r/lncm/specter-desktop)
-
+[![Docker Pulls Count](https://img.shields.io/docker/pulls/nolim1t/golang-httpd-test.svg?style=flat)](https://hub.docker.com/r/nolim1t/golang-httpd-test)
 ## About
 
 The purpose of this project is purely for learning how go build interfaces and a HTTPD API server in GOLANG.
