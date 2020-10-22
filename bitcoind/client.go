@@ -47,6 +47,14 @@ type (
 )
 
 // Methods
+// BlockCount
+func (b Bitcoind) BlockCount() (count int64, err error) {
+    res, _ := b.sendRequest(MethodGetBlockCount)
+    err = json.Unmarshal(res, &count)
+    
+    return
+}
+// sendRequest
 func (b Bitcoind) sendRequest(method string, params ...interface{}) (response []byte, err error) {
 	reqBody, err := json.Marshal(requestBody{
 		JSONRPC: "1.0",
