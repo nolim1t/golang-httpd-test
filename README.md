@@ -50,5 +50,5 @@ docker build --build-arg VERSION=0.0.1 \
 - [x] Static Directory serving
 - [ ] Toggle between dev and production mode
 - [x] `Dockerfile` support
-- [ ] Docker buildx support to push to both github and gitlab
+- [x] Docker buildx support to push to both github and gitlab
 - [ ] Tidy up code and make this a template fully configurable server in a MVC format
