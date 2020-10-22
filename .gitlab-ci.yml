@@ -104,14 +104,25 @@ build:buildx-tags-or-branch:
             if [ ! -z  $CI_COMMIT_TAG ]; then
               echo "Building $CI_COMMIT_TAG (tag mode)"
               echo "Repo to push to $CI_APPLICATION_REPOSITORY:$CI_COMMIT_TAG-$CI_COMMIT_SHORT_SHA"
-              docker buildx build --platform $CI_BUILDX_ARCHS --progress plain --pull -t "$CI_APPLICATION_REPOSITORY:$CI_COMMIT_TAG-$CI_COMMIT_SHORT_SHA" --push .
+              docker buildx build \
+                --platform $CI_BUILDX_ARCHS \
+                --build-arg VERSION=$CI_COMMIT_TAG \
+                --progress plain \
+                --pull \
+                -t "$CI_APPLICATION_REPOSITORY:$CI_COMMIT_TAG-$CI_COMMIT_SHORT_SHA" --push \
+                .
             else
               echo "Not building by tag as CI_COMMIT_TAG is empty"
             fi
             if [ ! -z $CI_COMMIT_BRANCH ]; then
               echo "Building $CI_COMMIT_BRANCH (branch mode)"
               echo "Repo to push to $CI_APPLICATION_REPOSITORY:$CI_COMMIT_SHORT_SHA"
-              docker buildx build --platform $CI_BUILDX_ARCHS --progress plain --pull -t "$CI_APPLICATION_REPOSITORY:$CI_COMMIT_SHORT_SHA" --push .
+              docker buildx build \
+                --platform $CI_BUILDX_ARCHS \
+                --build-arg VERSION=$CI_COMMIT_SHORT_SHA \
+                --progress plain --pull \
+                -t "$CI_APPLICATION_REPOSITORY:$CI_COMMIT_SHORT_SHA" --push \
+                .
             else
               echo "Not building by branch as CI_COMMIT_BRANCH is empty"
             fi
@@ -121,6 +132,7 @@ build:buildx-tags-or-branch:
               echo "Building to tag ($CI_COMMIT_TAG)"
               docker buildx build \
               --platform $CI_BUILDX_ARCHS \
+              --build-arg VERSION=$CI_COMMIT_TAG \
               --tag $DOCKER_USERNAME/$CI_PROJECT_NAME:$CI_COMMITTAG \
               --output "type=registry" .
             else
