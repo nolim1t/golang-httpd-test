@@ -15,9 +15,9 @@ import (
 
 // Define Constants (Accessible from outside this package)
 const (
-	MagnetometerX  = "/sys/bus/iio/devices/iio\:device3/in_magn_x_raw"
-	MagnetometerY  = "/sys/bus/iio/devices/iio\:device3/in_magn_y_raw"
-	MagnetometerZ  = "/sys/bus/iio/devices/iio\:device3/in_magn_z_raw"	
+	MagnetometerX  = "/sys/bus/iio/devices/iio\\:device3/in_magn_x_raw"
+	MagnetometerY  = "/sys/bus/iio/devices/iio\\:device3/in_magn_y_raw"
+	MagnetometerZ  = "/sys/bus/iio/devices/iio\\:device3/in_magn_z_raw"
 )
 
 func getMagneticHeading(axis string) string {
