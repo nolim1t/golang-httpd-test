@@ -14,7 +14,7 @@ type (
 		StaticDir               string `toml:"static-dir"` // Where index.html lives
 		LogFile                 string `toml:"log-file"`   // logfile to log
 		DisablePinephoneBinding bool   `toml:"disable-pinephone-binding"`
-
+        BitcoinClient           bool    `toml:"bitcoin-client"`
 		// [bitcoind] section in the `--config` file that defines Bitcoind's setup
 		Bitcoind Bitcoind `toml:"bitcoind"`
 	}
