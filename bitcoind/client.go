@@ -4,11 +4,34 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"gitlab.com/nolim1t/golang-httpd-test/common"
 	"io/ioutil"
 	"net/http"
+
+    // common utilities
+    // if commented out then we must redefine the following structs as outlined below
+    // But must redefine common.Bitcoind as something else so it doesnt conflict
+	"gitlab.com/nolim1t/golang-httpd-test/common"
 )
 
+/*
+    Config Notes in case common isn't available:
+
+    Inside common/config.go expecting to see the following struct
+    Config struct {
+        BitcoinClient           bool    `toml:"bitcoin-client"`
+        // [bitcoind] section in the `--config` file that defines Bitcoind's setup
+        Bitcoind Bitcoind `toml:"bitcoind"`
+    }
+
+    // Bitcoind config (common.Bitcoind)
+    Bitcoind struct {
+        Host string `toml:"host"`
+        Port int64  `toml:"port"`
+        User string `toml:"user"`
+        Pass string `toml:"pass"`
+    }
+
+*/
 const (
 	DefaultHostname = "localhost"
 	DefaultPort     = 8332
