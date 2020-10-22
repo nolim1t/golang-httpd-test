@@ -1,2 +1,12 @@
 port = 8080
 log-file = "~/.lncm/httpd.log"
+
+bitcoin-client = false
+
+[bitcoind]
+host = "localhost"
+port = 8332
+user = "lncm"
+pass = "password"
+
+
