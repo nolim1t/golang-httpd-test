@@ -7,29 +7,29 @@ import (
 	"io/ioutil"
 	"net/http"
 
-    // common utilities
-    // if commented out then we must redefine the following structs as outlined below
-    // But must redefine common.Bitcoind as something else so it doesnt conflict
+	// common utilities
+	// if commented out then we must redefine the following structs as outlined below
+	// But must redefine common.Bitcoind as something else so it doesnt conflict
 	"gitlab.com/nolim1t/golang-httpd-test/common"
 )
 
 /*
-    Config Notes in case common isn't available:
+   Config Notes in case common isn't available:
 
-    Inside common/config.go expecting to see the following struct
-    Config struct {
-        BitcoinClient           bool    `toml:"bitcoin-client"`
-        // [bitcoind] section in the `--config` file that defines Bitcoind's setup
-        Bitcoind Bitcoind `toml:"bitcoind"`
-    }
+   Inside common/config.go expecting to see the following struct
+   Config struct {
+       BitcoinClient           bool    `toml:"bitcoin-client"`
+       // [bitcoind] section in the `--config` file that defines Bitcoind's setup
+       Bitcoind Bitcoind `toml:"bitcoind"`
+   }
 
-    // Bitcoind config (common.Bitcoind)
-    Bitcoind struct {
-        Host string `toml:"host"`
-        Port int64  `toml:"port"`
-        User string `toml:"user"`
-        Pass string `toml:"pass"`
-    }
+   // Bitcoind config (common.Bitcoind)
+   Bitcoind struct {
+       Host string `toml:"host"`
+       Port int64  `toml:"port"`
+       User string `toml:"user"`
+       Pass string `toml:"pass"`
+   }
 
 */
 const (
@@ -72,11 +72,12 @@ type (
 // Methods
 // BlockCount
 func (b Bitcoind) BlockCount() (count int64, err error) {
-    res, _ := b.sendRequest(MethodGetBlockCount)
-    err = json.Unmarshal(res, &count)
-    
-    return
+	res, _ := b.sendRequest(MethodGetBlockCount)
+	err = json.Unmarshal(res, &count)
+
+	return
 }
+
 // sendRequest
 func (b Bitcoind) sendRequest(method string, params ...interface{}) (response []byte, err error) {
 	reqBody, err := json.Marshal(requestBody{
@@ -90,8 +91,8 @@ func (b Bitcoind) sendRequest(method string, params ...interface{}) (response []
 	}
 
 	req, err := http.NewRequest("POST", b.url, bytes.NewReader(reqBody))
-    if err != nil {
-        fmt.Printf("Error making request to %s", b.url)
+	if err != nil {
+		fmt.Printf("Error making request to %s", b.url)
 		return
 	}
 	req.SetBasicAuth(b.user, b.pass)
@@ -109,12 +110,12 @@ func (b Bitcoind) sendRequest(method string, params ...interface{}) (response []
 		return
 	}
 	var resBody responseBody
- 
+
 	err = json.Unmarshal(resBytes, &resBody)
 	if err != nil {
 		return
 	}
-    fmt.Printf("Number of blocks: %s\n", resBody.Result)
+	fmt.Printf("Number of blocks: %s\n", resBody.Result)
 
 	if resBody.Error != nil {
 		return nil, fmt.Errorf("bitcoind error (%d): %s", resBody.Error.Code, resBody.Error.Message)
@@ -135,12 +136,12 @@ func New(conf common.Bitcoind) (Bitcoind, error) {
 	if conf.User == "" {
 		conf.User = DefaultUsername
 	}
-    client := Bitcoind{
+	client := Bitcoind{
 		url:  fmt.Sprintf("http://%s:%d", conf.Host, conf.Port),
 		user: conf.User,
 		pass: conf.Pass,
 	}
-    fmt.Printf("Creating client... %s\n", client.url)
+	fmt.Printf("Creating client... %s\n", client.url)
 	_, err := client.BlockCount()
 	if err != nil {
 		return Bitcoind{}, fmt.Errorf("can't connect to Bitcoind: %w", err)

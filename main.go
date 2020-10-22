@@ -19,9 +19,9 @@ import (
 
 	// External libraries
 	// mine
+	"gitlab.com/nolim1t/golang-httpd-test/bitcoind"
 	"gitlab.com/nolim1t/golang-httpd-test/common"
 	"gitlab.com/nolim1t/golang-httpd-test/pineclient"
-	"gitlab.com/nolim1t/golang-httpd-test/bitcoind"
 
 	// github
 	"github.com/gin-contrib/cors"
@@ -35,20 +35,21 @@ import (
 
 // types
 type (
-    // How to read from Bitcoin client
-    BitcoinClient interface {
-        BlockCount() (int64, error)
-    }
+	// How to read from Bitcoin client
+	BitcoinClient interface {
+		BlockCount() (int64, error)
+	}
 )
+
 // Globals
 var (
-    version, gitHash string
-    // Accessing bitcoinclient
-    btcClient BitcoinClient
-	
-    conf             common.Config
-	showVersion      = flag.Bool("version", false, "Show version and exit")
-	configFilePath   = flag.String("config", common.DefaultConfigFile, "Path to a config file in TOML format")
+	version, gitHash string
+	// Accessing bitcoinclient
+	btcClient BitcoinClient
+
+	conf           common.Config
+	showVersion    = flag.Bool("version", false, "Show version and exit")
+	configFilePath = flag.String("config", common.DefaultConfigFile, "Path to a config file in TOML format")
 )
 
 // Functions
@@ -99,13 +100,13 @@ func init() {
 		})
 		log.WithFields(fields).Println("server started")
 	}
-    // if bitcoin client enabled
-    if conf.BitcoinClient {
-        btcClient, err = bitcoind.New(conf.Bitcoind)
-        if err != nil {
-            panic(err)
-        }
-    }
+	// if bitcoin client enabled
+	if conf.BitcoinClient {
+		btcClient, err = bitcoind.New(conf.Bitcoind)
+		if err != nil {
+			panic(err)
+		}
+	}
 }
 
 // Test endpoint
