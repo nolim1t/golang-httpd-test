@@ -85,7 +85,7 @@ func (b Bitcoind) sendRequest(method string, params ...interface{}) (response []
 	}
 	var resBody responseBody
 	err = json.Unmarshal(resBytes, &resBody)
-	if err != mil {
+	if err != nil {
 		return
 	}
 
@@ -97,7 +97,7 @@ func (b Bitcoind) sendRequest(method string, params ...interface{}) (response []
 }
 
 // Create new object of Bitcoind client
-func New(conf Bitcoind) (Bitcoind, error) {
+func New(conf common.Bitcoind) (Bitcoind, error) {
 	// Check if theres a bitcoin conf defined
 	if conf.Host == "" {
 		conf.Host = DefaultHostname
