@@ -61,12 +61,14 @@ func (b Bitcoind) sendRequest(method string, params ...interface{}) (response []
 		Method:  method,
 		Params:  params,
 	})
+
 	if err != nil {
 		return
 	}
 
-	req, err := http.NewRequest("Post", b.url, bytes.NewReader(reqBody))
-	if err != nil {
+	req, err := http.NewRequest("POST", b.url, bytes.NewReader(reqBody))
+    if err != nil {
+        fmt.Printf("Error making request to %s", b.url)
 		return
 	}
 	req.SetBasicAuth(b.user, b.pass)
@@ -84,10 +86,12 @@ func (b Bitcoind) sendRequest(method string, params ...interface{}) (response []
 		return
 	}
 	var resBody responseBody
+ 
 	err = json.Unmarshal(resBytes, &resBody)
 	if err != nil {
 		return
 	}
+    fmt.Printf("Number of blocks: %s\n", resBody.Result)
 
 	if resBody.Error != nil {
 		return nil, fmt.Errorf("bitcoind error (%d): %s", resBody.Error.Code, resBody.Error.Message)
@@ -108,11 +112,12 @@ func New(conf common.Bitcoind) (Bitcoind, error) {
 	if conf.User == "" {
 		conf.User = DefaultUsername
 	}
-	client := Bitcoind{
-		url:  fmt.Sprintf("http://%s:s", conf.Host, conf.Port),
+    client := Bitcoind{
+		url:  fmt.Sprintf("http://%s:%d", conf.Host, conf.Port),
 		user: conf.User,
 		pass: conf.Pass,
 	}
+    fmt.Printf("Creating client... %s\n", client.url)
 	_, err := client.BlockCount()
 	if err != nil {
 		return Bitcoind{}, fmt.Errorf("can't connect to Bitcoind: %w", err)
