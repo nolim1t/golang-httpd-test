@@ -1,5 +1,7 @@
 package bitcoind
 
+// Reference:
+// https://developer.bitcoin.org/reference/rpc/index.html
 import (
 	"bytes"
 	"encoding/json"
