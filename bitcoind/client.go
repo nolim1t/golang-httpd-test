@@ -98,15 +98,16 @@ func (b Bitcoind) BlockCount() (count int64, err error) {
 
 	return
 }
+
 // BlockchainInfo
 func (b Bitcoind) BlockchainInfo() (blockresp BlockchainInfoResponse, err error) {
-    res, err := b.sendRequest(MethodGetBlockchainInfo)
-    if err != nil {
-        return
-    }
-    err = json.Unmarshal(res, &blockresp)
-    
-    return
+	res, err := b.sendRequest(MethodGetBlockchainInfo)
+	if err != nil {
+		return
+	}
+	err = json.Unmarshal(res, &blockresp)
+
+	return
 }
 
 // sendRequest
