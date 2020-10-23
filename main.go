@@ -39,6 +39,7 @@ type (
 	BitcoinClient interface {
 		BlockCount() (int64, error)
 		BlockchainInfo() (bitcoind.BlockchainInfoResponse, error)
+		NetworkInfo() (nwinforesp string, err error)
 	}
 )
 
