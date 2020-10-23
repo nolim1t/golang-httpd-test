@@ -67,6 +67,27 @@ type (
 			Message string `json:"message,omitempty"`
 		} `json:"error,omitempty"`
 	}
+
+	// Bitcoin structs
+	// Response for 'getblockchainfo'
+	// omit: softforks section
+	BlockchainInfoResponse struct {
+		Chain                string  `json:"chain"`
+		Blocks               int64   `json:"blocks"`
+		Headers              int64   `json:"headers"`
+		BlockHash            string  `json:"bestblockhash"`
+		Difficulty           float64 `json:"difficulty"`
+		MedianTime           int64   `json:"mediantime"`
+		VerificationProgress float64 `json:"verificationprogress"`
+		InitialBlockDownload bool    `json:"initialblockdownload"`
+		ChainWork            string  `json:"chainwork"`
+		SizeOnDisk           int64   `json:"size_on_disk"`
+		Pruned               bool    `json:"pruned,omitempty"`
+		PruneHeight          int64   `json:"pruneheight,omitempty"`
+		AutomaticPruning     bool    `json:"automatic_pruning,omitempty"`
+		PruneTargetSize      int64   `json:"prune_target_size,omitempty"`
+		ChainWarnings        string  `json:"warnings"`
+	}
 )
 
 // Methods
@@ -141,7 +162,7 @@ func New(conf common.Bitcoind) (Bitcoind, error) {
 		user: conf.User,
 		pass: conf.Pass,
 	}
-	fmt.Printf("Creating client... %s\n", client.url)
+	fmt.Printf("Creating bitcoin client... %s\n", client.url)
 	_, err := client.BlockCount()
 	if err != nil {
 		return Bitcoind{}, fmt.Errorf("can't connect to Bitcoind: %w", err)
