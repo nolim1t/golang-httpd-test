@@ -112,6 +112,17 @@ func (b Bitcoind) BlockchainInfo() (blockresp BlockchainInfoResponse, err error)
 	return
 }
 
+// NetworkInfo
+func (b Bitcoind) NetworkInfo() (nwinforesp string, err error) {
+	res, err := b.sendRequest(MethodGetNetworkInfo)
+	if err != nil {
+		return
+	}
+	nwinforesp = string(res)
+
+	return
+}
+
 // sendRequest
 func (b Bitcoind) sendRequest(method string, params ...interface{}) (response []byte, err error) {
 	reqBody, err := json.Marshal(requestBody{
