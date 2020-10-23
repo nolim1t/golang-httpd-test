@@ -98,6 +98,16 @@ func (b Bitcoind) BlockCount() (count int64, err error) {
 
 	return
 }
+// BlockchainInfo
+func (b Bitcoind) BlockchainInfo() (blockresp BlockchainInfoResponse, err error) {
+    res, err := b.sendRequest(MethodGetBlockchainInfo)
+    if err != nil {
+        return
+    }
+    err = json.Unmarshal(res, &blockresp)
+    
+    return
+}
 
 // sendRequest
 func (b Bitcoind) sendRequest(method string, params ...interface{}) (response []byte, err error) {
@@ -136,7 +146,7 @@ func (b Bitcoind) sendRequest(method string, params ...interface{}) (response []
 	if err != nil {
 		return
 	}
-	fmt.Printf("Number of blocks: %s\n", resBody.Result)
+	fmt.Printf("Raw Response from %s: %s\n", method, resBody.Result)
 
 	if resBody.Error != nil {
 		return nil, fmt.Errorf("bitcoind error (%d): %s", resBody.Error.Code, resBody.Error.Message)
