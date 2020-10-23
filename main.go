@@ -38,6 +38,7 @@ type (
 	// How to read from Bitcoin client
 	BitcoinClient interface {
 		BlockCount() (int64, error)
+		BlockchainInfo() (bitcoind.BlockchainInfoResponse, error)
 	}
 )
 
@@ -105,6 +106,12 @@ func init() {
 		btcClient, err = bitcoind.New(conf.Bitcoind)
 		if err != nil {
 			panic(err)
+		}
+		blockchainInforesp, err := btcClient.BlockchainInfo()
+		if err != nil {
+			fmt.Println("Can't get blockchain info\n")
+		} else {
+			fmt.Println(blockchainInforesp.BlockHash)
 		}
 	}
 }
