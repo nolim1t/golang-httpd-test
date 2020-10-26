@@ -70,6 +70,7 @@ const (
 	MethodImportAddress         = "importaddress"
 	MethodListReceivedByAddress = "listreceivedbyaddress"
 	MethodGetRawTransaction     = "getrawtransaction"
+	MethodGetMempoolContents    = "getrawmempool"
 
 	Bech32 = "bech32"
 )
@@ -190,6 +191,17 @@ func (b Bitcoind) GetTransactionInfo(txid string) (txinfo VerboseTransactionInfo
 		return
 	}
 	err = json.Unmarshal(res, &txinfo)
+
+	return
+}
+
+// Get raw mempool
+func (b Bitcoind) GetMempoolContents() (mempoolcontents []string, err error) {
+	res, err := b.sendRequest(MethodGetMempoolContents)
+	if err != nil {
+		return
+	}
+	err = json.Unmarshal(res, &mempoolcontents)
 
 	return
 }

@@ -41,6 +41,7 @@ type (
 		BlockchainInfo() (bitcoind.BlockchainInfoResponse, error)
 		NetworkInfo() (nwinforesp string, err error)
 		GetTransactionInfo(string) (bitcoind.VerboseTransactionInfo, error)
+		GetMempoolContents() (mempoolcontents []string, err error)
 	}
 )
 
@@ -150,6 +151,20 @@ func blockchainTxInfo(c *gin.Context) {
 		"txinfo":  txInforesp,
 	})
 }
+func mempoolContents(c *gin.Context) {
+	// GetMempoolContents() (mempoolcontents []string, err error)
+	mempoolInfo, err := btcClient.GetMempoolContents()
+	if err != nil {
+		c.JSON(500, gin.H{
+			"message": fmt.Sprintf("Can't access mempool: %s", err),
+		})
+		return
+	}
+	c.JSON(200, gin.H{
+		"message": "OK",
+		"mempool": mempoolInfo,
+	})
+}
 
 // index endpoint
 // PinePhone Endpoints
@@ -206,6 +221,7 @@ func main() {
 		// Bitcoin
 		r.GET("/blockchainInfo", blockchainInfo)
 		r.GET("/txid/:id", blockchainTxInfo)
+		r.GET("/mempool", mempoolContents)
 	} else {
 		fmt.Println("Bitcoin client not enabled")
 	}
