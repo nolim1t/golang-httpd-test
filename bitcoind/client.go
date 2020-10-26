@@ -92,16 +92,21 @@ type (
 		ChainWarnings        string  `json:"warnings"`
 	}
 
-	// Input Transactions
+	// Input Transactions (Unspent UTXOs to build TX from)
 	TransactionInput struct {
 		TransactionID string `json:"txid"`
 		VoutID        int64  `json:"vout"`
+		Sequence      int64  `json:"sequence"`
 	}
+	// scriptPubKey struct in Transaction output
 	ScriptPubKeyObj struct {
+		ASMCode              string   `json:"asm"`
+		HexCode              string   `json:"hex"`
 		ScriptType           string   `json:"type"`
+		RequiredSigs         int64    `json:"reqsigs"`
 		TransactionAddresses []string `json:"addresses"`
 	}
-	// Output input
+	// New UTXO to move transaction to
 	TransactionOutput struct {
 		TransactionValue float64         `json:"value"`
 		TransactionIndex int64           `json:"n"`
