@@ -115,11 +115,14 @@ func init() {
 		} else {
 			fmt.Println(blockchainInforesp.BlockHash)
 		}
+		// Random tx
 		txInforesp, err := btcClient.GetTransactionInfo("1502ec78ebf791a339ecb988712598badf1fccd0a0b5763c8d2ef4d711d0ad5c")
 		if err != nil {
 			fmt.Printf("Can't get txid info (%s)\n", err)
 		} else {
-			fmt.Println(txInforesp.Confirmations)
+			fmt.Println("test\n")
+			fmt.Println(txInforesp.Vout[0].ScriptPubKey.TransactionAddresses)
+			fmt.Println(txInforesp.Vin)
 		}
 	}
 }
