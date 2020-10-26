@@ -2,6 +2,29 @@ package bitcoind
 
 // Reference:
 // https://developer.bitcoin.org/reference/rpc/index.html
+
+/*
+Interfacing with this package (add to the file)
+
+-----
+import (
+        "gitlab.com/nolim1t/golang-httpd-test/bitcoind"
+)
+
+type (
+        BitcoinClient interface {
+                BlockCount() (int64, error)
+                BlockchainInfo() (bitcoind.BlockchainInfoResponse, error)
+                NetworkInfo() (nwinforesp string, err error)
+                GetTransactionInfo(string) (bitcoind.VerboseTransactionInfo, error)
+        }
+)
+
+var (
+        btcClient BitcoinClient
+)
+*/
+
 import (
 	"bytes"
 	"encoding/json"
