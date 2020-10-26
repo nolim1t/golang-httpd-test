@@ -109,21 +109,25 @@ func init() {
 		if err != nil {
 			panic(err)
 		}
-		blockchainInforesp, err := btcClient.BlockchainInfo()
-		if err != nil {
-			fmt.Println("Can't get blockchain info\n")
-		} else {
-			fmt.Println(blockchainInforesp.BlockHash)
-		}
+		/*
+			blockchainInforesp, err := btcClient.BlockchainInfo()
+			if err != nil {
+				fmt.Println("Can't get blockchain info\n")
+			} else {
+				fmt.Println(blockchainInforesp.BlockHash)
+			}
+		*/
 		// Random tx
-		txInforesp, err := btcClient.GetTransactionInfo("1502ec78ebf791a339ecb988712598badf1fccd0a0b5763c8d2ef4d711d0ad5c")
-		if err != nil {
-			fmt.Printf("Can't get txid info (%s)\n", err)
-		} else {
-			fmt.Println("test\n")
-			fmt.Println(txInforesp.Vout[0].ScriptPubKey.TransactionAddresses)
-			fmt.Println(txInforesp.Vin)
-		}
+		/*
+			txInforesp, err := btcClient.GetTransactionInfo("1502ec78ebf791a339ecb988712598badf1fccd0a0b5763c8d2ef4d711d0ad5c")
+			if err != nil {
+				fmt.Printf("Can't get txid info (%s)\n", err)
+			} else {
+				fmt.Println("test\n")
+				fmt.Println(txInforesp.Vout[0].ScriptPubKey.TransactionAddresses)
+				fmt.Println(txInforesp.Vin)
+			}
+		*/
 	}
 }
 
@@ -131,6 +135,23 @@ func init() {
 func info(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"message": "pong",
+	})
+}
+
+// Bitcoin endpoints
+// begin: bitcoin functions
+func blockchainInfo(c *gin.Context) {
+	blockchainInforesp, err := btcClient.BlockchainInfo()
+	if err != nil {
+		c.JSON(500, gin.H{
+			"message": "Can't get blockchain info",
+		})
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"message":        "OK",
+		"blockchaininfo": blockchainInforesp,
 	})
 }
 
@@ -183,7 +204,14 @@ func main() {
 		c.JSON(200, common.FormatRoutes(router.Routes()))
 	})
 	r.GET("/info", info)
-	r.GET("/test", testQueryString)
+	if conf.BitcoinClient {
+		fmt.Println("Bitcoin client enabled")
+		r.GET("/test", testQueryString)
+		// Bitcoin
+		r.GET("/blockchainInfo", blockchainInfo)
+	} else {
+		fmt.Println("Bitcoin client not enabled")
+	}
 	// Pinephone stuff
 	r.GET("/batteryStatus", batStatus)
 	r.GET("/batteryCapacity", batCapacity)
