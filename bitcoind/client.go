@@ -142,10 +142,11 @@ type (
 		TransactionID   string              `json:"txid"`
 		TransactionHash string              `json:"hash"`
 		TransactionSize int64               `json:"size"`
-		Confirmations   int64               `json:"confirmations"`
-		Time            int64               `json:"time"`
-		Blocktime       int64               `json:"blocktime"`
-		Blockhash       string              `json:"blockhash"`
+		TransactionHex  string              `json:"hex"`
+		Confirmations   int64               `json:"confirmations,omitempty"`
+		Time            int64               `json:"time,omitempty"`
+		Blocktime       int64               `json:"blocktime,omitempty"`
+		Blockhash       string              `json:"blockhash,omitempty"`
 		Vin             []TransactionInput  `json:"vin"`
 		Vout            []TransactionOutput `json:"vout"`
 	}
