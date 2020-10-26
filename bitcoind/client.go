@@ -72,6 +72,10 @@ const (
 	MethodListReceivedByAddress = "listreceivedbyaddress"
 	MethodGetRawTransaction     = "getrawtransaction"
 	MethodGetMempoolContents    = "getrawmempool"
+    // Blockchain hash stuff
+    MethodGetBlock              = "getblock" // verbosity = 1
+    MethodGetBestBlock          = "getbestblockhash"
+    MethodGetHashByHeight       = "getblockhash"
 
 	Bech32 = "bech32"
 )
