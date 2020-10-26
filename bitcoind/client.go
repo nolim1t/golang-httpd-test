@@ -17,6 +17,7 @@ type (
                 BlockchainInfo() (bitcoind.BlockchainInfoResponse, error)
                 NetworkInfo() (nwinforesp string, err error)
                 GetTransactionInfo(string) (bitcoind.VerboseTransactionInfo, error)
+                GetMempoolContents() (mempoolcontents []string, err error)
         }
 )
 
