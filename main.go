@@ -109,25 +109,6 @@ func init() {
 		if err != nil {
 			panic(err)
 		}
-		/*
-			blockchainInforesp, err := btcClient.BlockchainInfo()
-			if err != nil {
-				fmt.Println("Can't get blockchain info\n")
-			} else {
-				fmt.Println(blockchainInforesp.BlockHash)
-			}
-		*/
-		// Random tx
-		/*
-			txInforesp, err := btcClient.GetTransactionInfo("1502ec78ebf791a339ecb988712598badf1fccd0a0b5763c8d2ef4d711d0ad5c")
-			if err != nil {
-				fmt.Printf("Can't get txid info (%s)\n", err)
-			} else {
-				fmt.Println("test\n")
-				fmt.Println(txInforesp.Vout[0].ScriptPubKey.TransactionAddresses)
-				fmt.Println(txInforesp.Vin)
-			}
-		*/
 	}
 }
 
@@ -152,6 +133,21 @@ func blockchainInfo(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"message":        "OK",
 		"blockchaininfo": blockchainInforesp,
+	})
+}
+
+func blockchainTxInfo(c *gin.Context) {
+	txInforesp, err := btcClient.GetTransactionInfo(c.Param("id"))
+	if err != nil {
+		c.JSON(500, gin.H{
+			"message": fmt.Sprintf("Can't access transaction index: %s", err),
+		})
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"message": "OK",
+		"txinfo":  txInforesp,
 	})
 }
 
@@ -209,6 +205,7 @@ func main() {
 		r.GET("/test", testQueryString)
 		// Bitcoin
 		r.GET("/blockchainInfo", blockchainInfo)
+		r.GET("/txid/:id", blockchainTxInfo)
 	} else {
 		fmt.Println("Bitcoin client not enabled")
 	}
