@@ -40,6 +40,7 @@ type (
 		BlockCount() (int64, error)
 		BlockchainInfo() (bitcoind.BlockchainInfoResponse, error)
 		NetworkInfo() (nwinforesp string, err error)
+		GetTransactionInfo(string) (bitcoind.VerboseTransactionInfo, error)
 	}
 )
 
@@ -113,6 +114,12 @@ func init() {
 			fmt.Println("Can't get blockchain info\n")
 		} else {
 			fmt.Println(blockchainInforesp.BlockHash)
+		}
+		txInforesp, err := btcClient.GetTransactionInfo("1502ec78ebf791a339ecb988712598badf1fccd0a0b5763c8d2ef4d711d0ad5c")
+		if err != nil {
+			fmt.Printf("Can't get txid info (%s)\n", err)
+		} else {
+			fmt.Println(txInforesp.Confirmations)
 		}
 	}
 }
