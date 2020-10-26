@@ -72,6 +72,9 @@ const (
 	MethodListReceivedByAddress = "listreceivedbyaddress"
 	MethodGetRawTransaction     = "getrawtransaction"
 	MethodGetMempoolContents    = "getrawmempool"
+	// Transaction Broadcasting
+	// https://developer.bitcoin.org/reference/rpc/sendrawtransaction.html
+	MethodBroadcastTx = "sendrawtransaction"
 	// Blockchain hash stuff
 	MethodGetBlock        = "getblock" // verbosity = 1
 	MethodGetBestBlock    = "getbestblockhash"
