@@ -97,11 +97,15 @@ type (
 		TransactionID string `json:"txid"`
 		VoutID        int64  `json:"vout"`
 	}
+	ScriptPubKeyObj struct {
+		ScriptType           string   `json:"type"`
+		TransactionAddresses []string `json:"addresses"`
+	}
 	// Output input
 	TransactionOutput struct {
-		TransactionValue     float64  `json:"value"`
-		TransactionIndex     int64    `json:"n"`
-		TransactionAddresses []string `json:"addresses"`
+		TransactionValue float64         `json:"value"`
+		TransactionIndex int64           `json:"n"`
+		ScriptPubKey     ScriptPubKeyObj `json:"scriptPubKey"`
 	}
 
 	// UTXO
@@ -114,8 +118,8 @@ type (
 		Time            int64               `json:"time"`
 		Blocktime       int64               `json:"blocktime"`
 		Blockhash       string              `json:"blockhash"`
-		vin             []TransactionInput  `json:"vin"`
-		vout            []TransactionOutput `json:"vout"`
+		Vin             []TransactionInput  `json:"vin"`
+		Vout            []TransactionOutput `json:"vout"`
 	}
 )
 
