@@ -46,6 +46,7 @@ const (
 	MethodGetNewAddress         = "getnetaddress"
 	MethodImportAddress         = "importaddress"
 	MethodListReceivedByAddress = "listreceivedbyaddress"
+	MethodGetRawTransaction     = "getrawtransaction"
 
 	Bech32 = "bech32"
 )
@@ -90,6 +91,32 @@ type (
 		PruneTargetSize      int64   `json:"prune_target_size,omitempty"`
 		ChainWarnings        string  `json:"warnings"`
 	}
+
+	// Input Transactions
+	TransactionInput struct {
+		TransactionID string `json:"txid"`
+		VoutID        int64  `json:"vout"`
+	}
+	// Output input
+	TransactionOutput struct {
+		TransactionValue     float64  `json:"value"`
+		TransactionIndex     int64    `json:"n"`
+		TransactionAddresses []string `json:"addresses"`
+	}
+
+	// UTXO
+	// Response for getrawtransaction
+	VerboseTransactionInfo struct {
+		TransactionID   string              `json:"txid"`
+		TransactionHash string              `json:"hash"`
+		TransactionSize int64               `json:"size"`
+		Confirmations   int64               `json:"confirmations"`
+		Time            int64               `json:"time"`
+		Blocktime       int64               `json:"blocktime"`
+		Blockhash       string              `json:"blockhash"`
+		vin             []TransactionInput  `json:"vin"`
+		vout            []TransactionOutput `json:"vout"`
+	}
 )
 
 // Methods
@@ -119,6 +146,17 @@ func (b Bitcoind) NetworkInfo() (nwinforesp string, err error) {
 		return
 	}
 	nwinforesp = string(res)
+
+	return
+}
+
+// Get transaction Info
+func (b Bitcoind) GetTransactionInfo(txid string) (txinfo VerboseTransactionInfo, err error) {
+	res, err := b.sendRequest(MethodGetRawTransaction, txid, 1)
+	if err != nil {
+		return
+	}
+	err = json.Unmarshal(res, &txinfo)
 
 	return
 }
