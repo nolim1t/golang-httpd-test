@@ -1,7 +1,7 @@
 version: '3.8'
 services:
     gohttpd:
-        image: nolim1t/golang-httpd-test:master-505a154
+        image: nolim1t/golang-httpd-test:0.0.2
         container_name: gohttpd
         network_mode: host
         restart: on-failure
