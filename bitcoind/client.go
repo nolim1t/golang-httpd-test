@@ -20,6 +20,7 @@ type (
                 GetMempoolContents() (mempoolcontents []string, err error)
                 PushTransaction(hex string) (txid string, err error)
                 GetBestBlockHash() (blockhash string, err error)
+                GetBlockHashByHeight(height int64) (blockhash string, err error)
         }
 )
 
