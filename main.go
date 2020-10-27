@@ -42,6 +42,7 @@ type (
 		NetworkInfo() (nwinforesp string, err error)
 		GetTransactionInfo(string) (bitcoind.VerboseTransactionInfo, error)
 		GetMempoolContents() (mempoolcontents []string, err error)
+		PushTransaction(hex string) (txid string, err error)
 	}
 )
 
@@ -165,6 +166,20 @@ func mempoolContents(c *gin.Context) {
 		"mempool": mempoolInfo,
 	})
 }
+func pushTransaction(c *gin.Context) {
+	// PushTransaction(hex string) (txid string, err error)
+	pushTxRes, err := btcClient.PushTransaction(c.PostForm("hex"))
+	if err != nil {
+		c.JSON(500, gin.H{
+			"message": fmt.Sprintf("Can't broadcast transaction: %s", err),
+		})
+		return
+	}
+	c.JSON(200, gin.H{
+		"message": "OK",
+		"txid":    pushTxRes,
+	})
+}
 
 // index endpoint
 // PinePhone Endpoints
@@ -219,9 +234,10 @@ func main() {
 		fmt.Println("Bitcoin client enabled")
 		r.GET("/test", testQueryString)
 		// Bitcoin
-		r.GET("/blockchainInfo", blockchainInfo)
-		r.GET("/txid/:id", blockchainTxInfo)
-		r.GET("/mempool", mempoolContents)
+		r.GET("/blockchainInfo", blockchainInfo) // blockchainInfo
+		r.GET("/txid/:id", blockchainTxInfo)     // txid
+		r.GET("/mempool", mempoolContents)       // mempool contents
+		r.POST("/pushtx", pushTransaction)       // Push transaction
 	} else {
 		fmt.Println("Bitcoin client not enabled")
 	}
