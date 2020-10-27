@@ -43,6 +43,7 @@ type (
 		GetTransactionInfo(string) (bitcoind.VerboseTransactionInfo, error)
 		GetMempoolContents() (mempoolcontents []string, err error)
 		PushTransaction(hex string) (txid string, err error)
+		GetBestBlockHash() (blockhash string, err error)
 	}
 )
 
@@ -180,6 +181,20 @@ func pushTransaction(c *gin.Context) {
 		"txid":    pushTxRes,
 	})
 }
+func getBestBlockHash(c *gin.Context) {
+	// GetBestBlockHash() (blockhash string, err error)
+	bestblock, err := btcClient.GetBestBlockHash()
+	if err != nil {
+		c.JSON(500, gin.H{
+			"message": fmt.Sprintf("Error getting the block hash: %s", err),
+		})
+		return
+	}
+	c.JSON(200, gin.H{
+		"message":   "OK",
+		"blockhash": bestblock,
+	})
+}
 
 // index endpoint
 // PinePhone Endpoints
@@ -238,6 +253,7 @@ func main() {
 		r.GET("/txid/:id", blockchainTxInfo)     // txid
 		r.GET("/mempool", mempoolContents)       // mempool contents
 		r.POST("/pushtx", pushTransaction)       // Push transaction
+		r.GET("/getblockhash", getBestBlockHash) // Get best blockhash
 	} else {
 		fmt.Println("Bitcoin client not enabled")
 	}

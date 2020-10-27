@@ -19,6 +19,7 @@ type (
                 GetTransactionInfo(string) (bitcoind.VerboseTransactionInfo, error)
                 GetMempoolContents() (mempoolcontents []string, err error)
                 PushTransaction(hex string) (txid string, err error)
+                GetBestBlockHash() (blockhash string, err error)
         }
 )
 
@@ -222,6 +223,28 @@ func (b Bitcoind) PushTransaction(hex string) (txid string, err error) {
 		return
 	}
 	err = json.Unmarshal(res, &txid)
+
+	return
+}
+
+// Get best block hash
+func (b Bitcoind) GetBestBlockHash() (blockhash string, err error) {
+	res, err := b.sendRequest(MethodGetBestBlock)
+	if err != nil {
+		return
+	}
+	err = json.Unmarshal(res, &blockhash)
+
+	return
+}
+
+// get block hash by height
+func (b Bitcoind) GetBlockHashByHeight(height int64) (blockhash string, err error) {
+	res, err := b.sendRequest(MethodGetHashByHeight, height)
+	if err != nil {
+		return
+	}
+	err = json.Unmarshal(res, &blockhash)
 
 	return
 }
