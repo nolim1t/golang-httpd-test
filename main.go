@@ -16,6 +16,7 @@ import (
 	"fmt"
 	"os"
 	"path"
+	"strconv"
 
 	// External libraries
 	// mine
@@ -44,6 +45,7 @@ type (
 		GetMempoolContents() (mempoolcontents []string, err error)
 		PushTransaction(hex string) (txid string, err error)
 		GetBestBlockHash() (blockhash string, err error)
+		GetBlockHashByHeight(height int64) (blockhash string, err error)
 	}
 )
 
@@ -196,6 +198,29 @@ func getBestBlockHash(c *gin.Context) {
 	})
 }
 
+// get blockhash by height
+func getBlockHashByHeight(c *gin.Context) {
+	// GetBlockHashByHeight(height int64) (blockhash string, err error)
+	heightInt, errtoInt := strconv.ParseInt(c.Param("id"), 10, 64)
+	if errtoInt != nil {
+		c.JSON(500, gin.H{
+			"message": "Error converting input to integer",
+		})
+		return
+	}
+	blockhash, err := btcClient.GetBlockHashByHeight(heightInt)
+	if err != nil {
+		c.JSON(500, gin.H{
+			"message": fmt.Sprintf("Error getting the block hash: %s", err),
+		})
+		return
+	}
+	c.JSON(200, gin.H{
+		"message":   "OK",
+		"blockhash": blockhash,
+	})
+}
+
 // index endpoint
 // PinePhone Endpoints
 func batStatus(c *gin.Context) {
@@ -249,11 +274,12 @@ func main() {
 		fmt.Println("Bitcoin client enabled")
 		r.GET("/test", testQueryString)
 		// Bitcoin
-		r.GET("/blockchainInfo", blockchainInfo) // blockchainInfo
-		r.GET("/txid/:id", blockchainTxInfo)     // txid
-		r.GET("/mempool", mempoolContents)       // mempool contents
-		r.POST("/pushtx", pushTransaction)       // Push transaction
-		r.GET("/getblockhash", getBestBlockHash) // Get best blockhash
+		r.GET("/blockchainInfo", blockchainInfo)        // blockchainInfo
+		r.GET("/txid/:id", blockchainTxInfo)            // txid
+		r.GET("/mempool", mempoolContents)              // mempool contents
+		r.POST("/pushtx", pushTransaction)              // Push transaction
+		r.GET("/getblockhash", getBestBlockHash)        // Get best blockhash
+		r.GET("/blockheight/:id", getBlockHashByHeight) // get blockhash by height
 	} else {
 		fmt.Println("Bitcoin client not enabled")
 	}
