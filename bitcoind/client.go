@@ -218,7 +218,7 @@ func (b Bitcoind) GetMempoolContents() (mempoolcontents []string, err error) {
 // Broadcast TX
 func (b Bitcoind) PushTransaction(hex string) (txid string, err error) {
 	res, err := b.sendRequest(MethodBroadcastTx, hex)
-	if err != nul {
+	if err != nil {
 		return
 	}
 	err = json.Unmarshal(res, &txid)
