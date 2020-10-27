@@ -18,6 +18,7 @@ type (
                 NetworkInfo() (nwinforesp string, err error)
                 GetTransactionInfo(string) (bitcoind.VerboseTransactionInfo, error)
                 GetMempoolContents() (mempoolcontents []string, err error)
+                PushTransaction(hex string) (txid string, err error)
         }
 )
 
@@ -210,6 +211,17 @@ func (b Bitcoind) GetMempoolContents() (mempoolcontents []string, err error) {
 		return
 	}
 	err = json.Unmarshal(res, &mempoolcontents)
+
+	return
+}
+
+// Broadcast TX
+func (b Bitcoind) PushTransaction(hex string) (txid string, err error) {
+	res, err := b.sendRequest(MethodBroadcastTx, hex)
+	if err != nul {
+		return
+	}
+	err = json.Unmarshal(res, &txid)
 
 	return
 }
