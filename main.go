@@ -47,6 +47,7 @@ type (
 		GetBestBlockHash() (blockhash string, err error)
 		GetBlockHashByHeight(height int64) (blockhash string, err error)
 		GetBlock(hash string) (blockinfo bitcoind.BitcoinBlockResponse, err error)
+		GetMempoolInfo() (mempoolinfo bitcoind.MempoolInfoResponse, err error)
 	}
 )
 
@@ -238,6 +239,22 @@ func getBlock(c *gin.Context) {
 	})
 }
 
+// mempool info
+func getMempoolInfo(c *gin.Context) {
+	// GetMempoolInfo() (mempoolinfo bitcoind.MempoolInfoResponse, err error)
+	mempool, err := btcClient.GetMempoolInfo()
+	if err != nil {
+		c.JSON(500, gin.H{
+			"message": fmt.Sprintf("Error getting mempool info: %s", err),
+		})
+		return
+	}
+	c.JSON(200, gin.H{
+		"message": "OK",
+		"mempool": mempool,
+	})
+}
+
 // index endpoint
 // PinePhone Endpoints
 func batStatus(c *gin.Context) {
@@ -281,7 +298,6 @@ func main() {
 	router := gin.Default()
 	router.Use(cors.Default())
 	router.Use(gzip.Gzip(gzip.DefaultCompression))
-
 	r := router.Group("/api")
 	r.GET("/", func(c *gin.Context) {
 		c.JSON(200, common.FormatRoutes(router.Routes()))
@@ -290,10 +306,11 @@ func main() {
 	if conf.BitcoinClient {
 		fmt.Println("Bitcoin client enabled")
 		r.GET("/test", testQueryString)
-		// Bitcoin
+		// Bitcoin Blockchain Querying
 		r.GET("/blockchainInfo", blockchainInfo)        // blockchainInfo
 		r.GET("/txid/:id", blockchainTxInfo)            // txid
 		r.GET("/mempool", mempoolContents)              // mempool contents
+		r.GET("/mempoolstats", getMempoolInfo)          // get mempool stats
 		r.POST("/pushtx", pushTransaction)              // Push transaction
 		r.GET("/getblockhash", getBestBlockHash)        // Get best blockhash
 		r.GET("/blockheight/:id", getBlockHashByHeight) // get blockhash by height
