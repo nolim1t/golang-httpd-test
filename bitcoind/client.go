@@ -191,7 +191,7 @@ type (
 		MedianTime        int64    `json:"mediantime"`
 		Nonce             int64    `json:"nonce"`
 		Bits              string   `json:"bits"`
-		Difficulty        int64    `json:"difficulty"`
+		Difficulty        float64  `json:"difficulty"`
 		Chainwork         string   `json:"chainwork"`
 		PreviousBlockHash string   `json:"previousblockhash"`
 		NextBlockHash     string   `json:"nextblockhash"`
