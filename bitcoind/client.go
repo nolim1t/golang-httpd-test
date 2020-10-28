@@ -1,9 +1,20 @@
 package bitcoind
 
-// Reference:
-// https://developer.bitcoin.org/reference/rpc/index.html
+/*
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
+*/
 
 /*
+Reference:
+https://developer.bitcoin.org/reference/rpc/index.html
+Add to https://gitlab.com/nolim1t/golang-httpd-test/-/issues for stuff to implement.
+
 Interfacing with this package (add to the file)
 
 -----
