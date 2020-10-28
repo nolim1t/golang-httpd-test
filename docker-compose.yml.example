@@ -5,5 +5,7 @@ services:
         container_name: gohttpd
         network_mode: host
         restart: on-failure
+        environment:
+            GIN_MODE: "release"
         volumes:
             - "${HOME}/.lncm:/data/.lncm"
