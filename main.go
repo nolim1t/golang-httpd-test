@@ -46,6 +46,7 @@ type (
 		PushTransaction(hex string) (txid string, err error)
 		GetBestBlockHash() (blockhash string, err error)
 		GetBlockHashByHeight(height int64) (blockhash string, err error)
+        GetBlock(hash string) (blockinfo bitcoind.BitcoinBlockResponse, err error)
 	}
 )
 
@@ -220,6 +221,21 @@ func getBlockHashByHeight(c *gin.Context) {
 		"blockhash": blockhash,
 	})
 }
+// get Block info
+func getBlock(c *gin.Context) {
+    // GetBlock(hash string) (blockinfo BitcoinBlockResponse, err error)
+    bitcoinblock, err := btcClient.GetBlock(c.Param("id"))
+    if err != nil {
+        c.JSON(500, gin.H{
+            "message": fmt.Sprintf("Error getting block: %s", err),
+        })
+        return
+    }
+    c.JSON(200, gin.H{
+        "message":  "OK",
+        "block":    bitcoinblock,
+    })
+}
 
 // index endpoint
 // PinePhone Endpoints
@@ -280,6 +296,7 @@ func main() {
 		r.POST("/pushtx", pushTransaction)              // Push transaction
 		r.GET("/getblockhash", getBestBlockHash)        // Get best blockhash
 		r.GET("/blockheight/:id", getBlockHashByHeight) // get blockhash by height
+        r.GET("/block/:id", getBlock) // getBlock
 	} else {
 		fmt.Println("Bitcoin client not enabled")
 	}
