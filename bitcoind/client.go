@@ -32,6 +32,7 @@ type (
                 PushTransaction(hex string) (txid string, err error)
                 GetBestBlockHash() (blockhash string, err error)
                 GetBlockHashByHeight(height int64) (blockhash string, err error)
+                GetBlock(hash string) (blockinfo BitcoinBlockResponse, err error)
         }
 )
 
@@ -173,6 +174,28 @@ type (
 		Vin             []TransactionInput  `json:"vin"`
 		Vout            []TransactionOutput `json:"vout"`
 	}
+
+	// Struct for bitcoin block
+	BitcoinBlockResponse struct {
+		Hash              string   `json:"hash"`
+		Confirmations     int64    `json:"confirmations"`
+		Size              int64    `json:"size"`
+		StrippedSize      int64    `json:"strippedsize"`
+		Weight            int64    `json:"weight"`
+		Height            int64    `json:"height"`
+		Version           int64    `json:"version"`
+		VersionHex        string   `json:"versionhex"`
+		MerkleRoot        string   `json:"merkleroot"`
+		Transactions      []string `json:"tx"`
+		Time              int64    `json:"time"`
+		MedianTime        int64    `json:"mediantime"`
+		Nonce             int64    `json:"nonce"`
+		Bits              string   `json:"bits"`
+		Difficulty        int64    `json:"difficulty"`
+		Chainwork         string   `json:"chainwork"`
+		PreviousBlockHash string   `json:"previousblockhash"`
+		NextBlockHash     string   `json:"nextblockhash"`
+	}
 )
 
 // Methods
@@ -257,6 +280,17 @@ func (b Bitcoind) GetBlockHashByHeight(height int64) (blockhash string, err erro
 		return
 	}
 	err = json.Unmarshal(res, &blockhash)
+
+	return
+}
+
+// getblock (MethodGetBlock)
+func (b Bitcoind) GetBlock(hash string) (blockinfo BitcoinBlockResponse, err error) {
+	res, err := b.sendRequest(MethodGetBlock, hash, 1)
+	if err != nil {
+		return
+	}
+	err = json.Unmarshal(res, &blockinfo)
 
 	return
 }
