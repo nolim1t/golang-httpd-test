@@ -200,12 +200,12 @@ type (
 	}
 	// Get mempool info struct
 	MempoolInfoResponse struct {
-		Size          int64 `json:"size"`
-		Bytes         int64 `json:"bytes"`
-		Usage         int64 `json:"usage"`
-		MaxMempool    int64 `json:"maxmempool"`
-		MempoolMinFee int64 `json:"mempoolminfee"`
-		MinRelayTxFee int64 `json:"minrelaytxfee"`
+		Size          int64   `json:"size"`
+		Bytes         int64   `json:"bytes"`
+		Usage         int64   `json:"usage"`
+		MaxMempool    int64   `json:"maxmempool"`
+		MempoolMinFee float64 `json:"mempoolminfee"`
+		MinRelayTxFee float64 `json:"minrelaytxfee"`
 	}
 )
 
