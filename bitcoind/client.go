@@ -32,6 +32,8 @@ type (
                 PushTransaction(hex string) (txid string, err error)
                 GetBestBlockHash() (blockhash string, err error)
                 GetBlockHashByHeight(height int64) (blockhash string, err error)
+                GetBlock(hash string) (bitcoind.BitcoinBlockResponse, err error)
+                GetMempoolInfo() (mempoolinfo bitcoind.MempoolInfoResponse, err error)
         }
 )
 
@@ -93,6 +95,7 @@ const (
 	MethodGetBlock        = "getblock" // verbosity = 1
 	MethodGetBestBlock    = "getbestblockhash"
 	MethodGetHashByHeight = "getblockhash"
+	MethodGetMempool      = "getmempoolinfo"
 
 	Bech32 = "bech32"
 )
@@ -173,6 +176,37 @@ type (
 		Vin             []TransactionInput  `json:"vin"`
 		Vout            []TransactionOutput `json:"vout"`
 	}
+
+	// Struct for bitcoin block
+	BitcoinBlockResponse struct {
+		Hash              string   `json:"hash"`
+		Confirmations     int64    `json:"confirmations"`
+		Size              int64    `json:"size"`
+		StrippedSize      int64    `json:"strippedsize"`
+		Weight            int64    `json:"weight"`
+		Height            int64    `json:"height"`
+		Version           int64    `json:"version"`
+		VersionHex        string   `json:"versionhex"`
+		MerkleRoot        string   `json:"merkleroot"`
+		Transactions      []string `json:"tx"`
+		Time              int64    `json:"time"`
+		MedianTime        int64    `json:"mediantime"`
+		Nonce             int64    `json:"nonce"`
+		Bits              string   `json:"bits"`
+		Difficulty        float64  `json:"difficulty"`
+		Chainwork         string   `json:"chainwork"`
+		PreviousBlockHash string   `json:"previousblockhash"`
+		NextBlockHash     string   `json:"nextblockhash"`
+	}
+	// Get mempool info struct
+	MempoolInfoResponse struct {
+		Size          int64   `json:"size"`
+		Bytes         int64   `json:"bytes"`
+		Usage         int64   `json:"usage"`
+		MaxMempool    int64   `json:"maxmempool"`
+		MempoolMinFee float64 `json:"mempoolminfee"`
+		MinRelayTxFee float64 `json:"minrelaytxfee"`
+	}
 )
 
 // Methods
@@ -228,6 +262,17 @@ func (b Bitcoind) GetMempoolContents() (mempoolcontents []string, err error) {
 	return
 }
 
+// MethodGetMempool
+func (b Bitcoind) GetMempoolInfo() (mempoolinfo MempoolInfoResponse, err error) {
+	res, err := b.sendRequest(MethodGetMempool)
+	if err != nil {
+		return
+	}
+	err = json.Unmarshal(res, &mempoolinfo)
+
+	return
+}
+
 // Broadcast TX
 func (b Bitcoind) PushTransaction(hex string) (txid string, err error) {
 	res, err := b.sendRequest(MethodBroadcastTx, hex)
@@ -257,6 +302,17 @@ func (b Bitcoind) GetBlockHashByHeight(height int64) (blockhash string, err erro
 		return
 	}
 	err = json.Unmarshal(res, &blockhash)
+
+	return
+}
+
+// getblock (MethodGetBlock)
+func (b Bitcoind) GetBlock(hash string) (blockinfo BitcoinBlockResponse, err error) {
+	res, err := b.sendRequest(MethodGetBlock, hash, 1)
+	if err != nil {
+		return
+	}
+	err = json.Unmarshal(res, &blockinfo)
 
 	return
 }
