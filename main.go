@@ -128,6 +128,20 @@ func info(c *gin.Context) {
 
 // Bitcoin endpoints
 // begin: bitcoin functions
+func blockCount(c *gin.Context) {
+	blockcount, err := btcClient.BlockCount()
+	if err != nil {
+		c.JSON(500, gin.H{
+			"message": "Can't get blockchain count",
+		})
+		return
+	}
+	c.JSON(200, gin.H{
+		"message": "OK",
+		"count":   blockcount,
+	})
+}
+
 func blockchainInfo(c *gin.Context) {
 	blockchainInforesp, err := btcClient.BlockchainInfo()
 	if err != nil {
@@ -320,6 +334,7 @@ func main() {
 		fmt.Println("Bitcoin client enabled")
 		r.GET("/test", testQueryString)
 		// Bitcoin Blockchain Querying
+		r.GET("/blocks", blockCount)                    // blockcount
 		r.GET("/blockchaininfo", blockchainInfo)        // blockchainInfo
 		r.GET("/networkinfo", networkInfo)              // networkInfo
 		r.GET("/mempoolinfo", getMempoolInfo)           // get mempool stats
