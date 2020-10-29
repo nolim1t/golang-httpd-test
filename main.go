@@ -322,9 +322,9 @@ func main() {
 		// Bitcoin Blockchain Querying
 		r.GET("/blockchaininfo", blockchainInfo)        // blockchainInfo
 		r.GET("/networkinfo", networkInfo)              // networkInfo
+		r.GET("/mempoolinfo", getMempoolInfo)           // get mempool stats
 		r.GET("/txid/:id", blockchainTxInfo)            // txid
 		r.GET("/mempool", mempoolContents)              // mempool contents
-		r.GET("/mempoolstats", getMempoolInfo)          // get mempool stats
 		r.POST("/pushtx", pushTransaction)              // Push transaction
 		r.GET("/getblockhash", getBestBlockHash)        // Get best blockhash
 		r.GET("/blockheight/:id", getBlockHashByHeight) // get blockhash by height
