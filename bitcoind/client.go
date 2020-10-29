@@ -253,25 +253,33 @@ type (
 	}
 	// PeerInfo struct
 	PeerInfo struct {
-		Id         int64   `json:"id"`
-		Addr       string  `json:"addr"`
-		AddrBind   string  `json:"addrbind"`
-		AddrLocal  string  `json:"addrlocal"`
-		Services   string  `json:"services"`
-		RelayTx    bool    `json:"relaytxes"`
-		LastSend   int64   `json:"lastsend"`
-		LastRecv   int64   `json:"lastrcv"`
-		BytesSent  int64   `json:"bytessent"`
-		BytesRecv  int64   `json:"bytesrecv"`
-		ConnTime   int64   `json:"conntime"`
-		TimeOffset int64   `json:"timeoffset"`
-		PingTime   float64 `json:"pingtime"`
-		MinPing    float64 `json:"minping"`
-		PingWait   float64 `json:"pingwait"`
-		Version    int64   `json:"version"`
-		SubVer     string  `json:"subver"`
-		Inbound    bool    `json:"inbound"`
-		AddNode    bool    `json:"addnode"`
+		Id             int64    `json:"id"`
+		Addr           string   `json:"addr"`
+		AddrBind       string   `json:"addrbind"`
+		AddrLocal      string   `json:"addrlocal"`
+		Services       string   `json:"services"`
+		ServicesName   []string `json:"servicesnames"`
+		RelayTx        bool     `json:"relaytxes"`
+		LastSend       int64    `json:"lastsend"`
+		LastRecv       int64    `json:"lastrcv"`
+		BytesSent      int64    `json:"bytessent"`
+		BytesRecv      int64    `json:"bytesrecv"`
+		ConnTime       int64    `json:"conntime"`
+		TimeOffset     int64    `json:"timeoffset"`
+		PingTime       float64  `json:"pingtime"`
+		MinPing        float64  `json:"minping"`
+		PingWait       float64  `json:"pingwait"`
+		Version        int64    `json:"version"`
+		SubVer         string   `json:"subver"`
+		Inbound        bool     `json:"inbound"`
+		AddNode        bool     `json:"addnode"`
+		StartingHeight int64    `json:"startingheight"`
+		BanScore       int64    `json:"banscore"`
+		SyncedHeaders  int64    `json:"synced_headers"`
+		SyncedBlocks   int64    `json:"synced_blocks"`
+		InFlight       []int64  `json:"inflight"`
+		WhiteListed    bool     `json:"whitelisted"`
+		MinFeeFilter   float64  `json:"minfeefilter"`
 	}
 )
 
