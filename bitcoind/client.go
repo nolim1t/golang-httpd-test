@@ -26,7 +26,7 @@ type (
         BitcoinClient interface {
                 BlockCount() (int64, error)
                 BlockchainInfo() (bitcoind.BlockchainInfoResponse, error)
-                NetworkInfo() (nwinforesp string, err error)
+                NetworkInfo() (bitcoind.NetworkInfoResponse, err error)
                 GetTransactionInfo(string) (bitcoind.VerboseTransactionInfo, error)
                 GetMempoolContents() (mempoolcontents []string, err error)
                 PushTransaction(hex string) (txid string, err error)
@@ -207,6 +207,35 @@ type (
 		MempoolMinFee float64 `json:"mempoolminfee"`
 		MinRelayTxFee float64 `json:"minrelaytxfee"`
 	}
+	// NetworkList struct
+	NetworkList struct {
+		Name                      string `json:"string"`
+		Limited                   bool   `json:"limited"`
+		Reachable                 bool   `json:"reachable"`
+		Proxy                     string `json:"proxy"`
+		ProxyRandomizeCredentials bool   `json:"proxy_randomize_credentials"`
+	}
+	// AddressList struct
+	AddressList struct {
+		Address string `json:"address"`
+		Port    int64  `json:"port"`
+		Score   int64  `json:"score"`
+	}
+	// getnetworkinfo struct
+	NetworkInfoResponse struct {
+		Version         int64         `json:"version"`
+		SubVersion      string        `json:"subversion"`
+		ProtocolVersion int64         `json:"protocolversion"`
+		LocalServices   string        `json:"localservices"`
+		LocalRelay      bool          `json:"localrelay"`
+		Connections     int64         `json:"connections"`
+		NetworkActive   bool          `json:"networkactive"`
+		Networks        []NetworkList `json:"networks"`
+		RelayFee        float64       `json:"relayfee"`
+		IncrementalFee  float64       `json:"incrementalfee"`
+		LocalAddresses  []AddressList `json:"localaddresses"`
+		Warnings        string        `json:"warnings"`
+	}
 )
 
 // Methods
@@ -230,12 +259,12 @@ func (b Bitcoind) BlockchainInfo() (blockresp BlockchainInfoResponse, err error)
 }
 
 // NetworkInfo
-func (b Bitcoind) NetworkInfo() (nwinforesp string, err error) {
+func (b Bitcoind) NetworkInfo() (nwinforesp NetworkInfoResponse, err error) {
 	res, err := b.sendRequest(MethodGetNetworkInfo)
 	if err != nil {
 		return
 	}
-	nwinforesp = string(res)
+	err = json.Unmarshal(res, &nwinforesp)
 
 	return
 }
