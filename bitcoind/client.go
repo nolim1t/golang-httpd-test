@@ -35,6 +35,7 @@ type (
                 GetBlock(hash string) (bitcoind.BitcoinBlockResponse, error)
                 GetMempoolInfo() (bitcoind.MempoolInfoResponse, error)
                 GetMiningInfo() (bitcoind.MiningInfoResponse, error)
+                GetPeerInfo() ([]PeerInfo, error)
         }
 )
 
@@ -98,6 +99,7 @@ const (
 	MethodGetHashByHeight = "getblockhash"
 	MethodGetMempool      = "getmempoolinfo"
 	MethodGetMiningInfo   = "getmininginfo"
+	MethodGetPeerInfo     = "getpeerinfo"
 
 	Bech32 = "bech32"
 )
@@ -249,6 +251,14 @@ type (
 		Chain                   string  `json:"chain"`
 		Warnings                string  `json:"warnings"`
 	}
+	// PeerInfo struct
+	PeerInfo struct {
+		Id        int64  `json:"id"`
+		Addr      string `json:"addr"`
+		AddrBind  string `json:"addrbind"`
+		AddrLocal string `json:"addrlocal"`
+		Services  string `json:"services"`
+	}
 )
 
 // Methods
@@ -256,6 +266,13 @@ type (
 func (b Bitcoind) BlockCount() (count int64, err error) {
 	res, _ := b.sendRequest(MethodGetBlockCount)
 	err = json.Unmarshal(res, &count)
+
+	return
+}
+
+func (b Bitcoind) GetPeerInfo() (peerinfo []PeerInfo, err error) {
+	res, err := b.sendRequest(MethodGetPeerInfo)
+	err = json.Unmarshal(res, &peerinfo)
 
 	return
 }
