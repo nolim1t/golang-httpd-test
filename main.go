@@ -48,6 +48,7 @@ type (
 		GetBlockHashByHeight(height int64) (string, error)
 		GetBlock(hash string) (bitcoind.BitcoinBlockResponse, error)
 		GetMempoolInfo() (bitcoind.MempoolInfoResponse, error)
+		GetMiningInfo() (bitcoind.MiningInfoResponse, error)
 	}
 )
 
@@ -167,6 +168,19 @@ func networkInfo(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"message":     "OK",
 		"networkinfo": networkInfoResp,
+	})
+}
+func miningInfo(c *gin.Context) {
+	miningInfoResp, err := btcClient.GetMiningInfo()
+	if err != nil {
+		c.JSON(500, gin.H{
+			"message": fmt.Sprintf("Can't get mining info: %s", err),
+		})
+		return
+	}
+	c.JSON(200, gin.H{
+		"message":    "OK",
+		"mininginfo": miningInfoResp,
 	})
 }
 
@@ -338,6 +352,7 @@ func main() {
 		r.GET("/blockchaininfo", blockchainInfo)        // blockchainInfo
 		r.GET("/networkinfo", networkInfo)              // networkInfo
 		r.GET("/mempoolinfo", getMempoolInfo)           // get mempool stats
+		r.GET("/mininginfo", miningInfo)                // mininginfo
 		r.GET("/txid/:id", blockchainTxInfo)            // txid
 		r.GET("/mempool", mempoolContents)              // mempool contents
 		r.POST("/pushtx", pushTransaction)              // Push transaction
