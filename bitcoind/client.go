@@ -253,11 +253,25 @@ type (
 	}
 	// PeerInfo struct
 	PeerInfo struct {
-		Id        int64  `json:"id"`
-		Addr      string `json:"addr"`
-		AddrBind  string `json:"addrbind"`
-		AddrLocal string `json:"addrlocal"`
-		Services  string `json:"services"`
+		Id         int64   `json:"id"`
+		Addr       string  `json:"addr"`
+		AddrBind   string  `json:"addrbind"`
+		AddrLocal  string  `json:"addrlocal"`
+		Services   string  `json:"services"`
+		RelayTx    bool    `json:"relaytxes"`
+		LastSend   int64   `json:"lastsend"`
+		LastRecv   int64   `json:"lastrcv"`
+		BytesSent  int64   `json:"bytessent"`
+		BytesRecv  int64   `json:"bytesrecv"`
+		ConnTime   int64   `json:"conntime"`
+		TimeOffset int64   `json:"timeoffset"`
+		PingTime   float64 `json:"pingtime"`
+		MinPing    float64 `json:"minping"`
+		PingWait   float64 `json:"pingwait"`
+		Version    int64   `json:"version"`
+		SubVer     string  `json:"subver"`
+		Inbound    bool    `json:"inbound"`
+		AddNode    bool    `json:"addnode"`
 	}
 )
 
