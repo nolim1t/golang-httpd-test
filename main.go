@@ -49,6 +49,7 @@ type (
 		GetBlock(hash string) (bitcoind.BitcoinBlockResponse, error)
 		GetMempoolInfo() (bitcoind.MempoolInfoResponse, error)
 		GetMiningInfo() (bitcoind.MiningInfoResponse, error)
+		GetPeerInfo() ([]bitcoind.PeerInfo, error)
 	}
 )
 
@@ -296,6 +297,22 @@ func getMempoolInfo(c *gin.Context) {
 	})
 }
 
+// peer info
+func getPeerInfo(c *gin.Context) {
+	// GetPeerInfo() ([]bitcoind.PeerInfo, error)
+	peerinfo, err := btcClient.GetPeerInfo()
+	if err != nil {
+		c.JSON(500, gin.H{
+			"message": fmt.Sprintf("Error getting peer info: %s", err),
+		})
+		return
+	}
+	c.JSON(200, gin.H{
+		"peerinfo": peerinfo,
+		"message":  "OK",
+	})
+}
+
 // index endpoint
 // PinePhone Endpoints
 func batStatus(c *gin.Context) {
@@ -353,6 +370,7 @@ func main() {
 		r.GET("/networkinfo", networkInfo)              // networkInfo
 		r.GET("/mempoolinfo", getMempoolInfo)           // get mempool stats
 		r.GET("/mininginfo", miningInfo)                // mininginfo
+		r.GET("/peerinfo", getPeerInfo)                 // peerinfo
 		r.GET("/txid/:id", blockchainTxInfo)            // txid
 		r.GET("/mempool", mempoolContents)              // mempool contents
 		r.POST("/pushtx", pushTransaction)              // Push transaction
