@@ -40,7 +40,7 @@ type (
 	BitcoinClient interface {
 		BlockCount() (int64, error)
 		BlockchainInfo() (bitcoind.BlockchainInfoResponse, error)
-		NetworkInfo() (nwinforesp string, err error)
+		NetworkInfo() (bitcoind.NetworkInfoResponse, error)
 		GetTransactionInfo(string) (bitcoind.VerboseTransactionInfo, error)
 		GetMempoolContents() (mempoolcontents []string, err error)
 		PushTransaction(hex string) (txid string, err error)
@@ -140,6 +140,19 @@ func blockchainInfo(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"message":        "OK",
 		"blockchaininfo": blockchainInforesp,
+	})
+}
+func networkInfo(c *gin.Context) {
+	networkInfoResp, err := btcClient.NetworkInfo()
+	if err != nil {
+		c.JSON(500, gin.H{
+			"message": "Can't get network info",
+		})
+		return
+	}
+	c.JSON(200, gin.H{
+		"message":     "OK",
+		"networkinfo": networkInfoResp,
 	})
 }
 
@@ -307,7 +320,8 @@ func main() {
 		fmt.Println("Bitcoin client enabled")
 		r.GET("/test", testQueryString)
 		// Bitcoin Blockchain Querying
-		r.GET("/blockchainInfo", blockchainInfo)        // blockchainInfo
+		r.GET("/blockchaininfo", blockchainInfo)        // blockchainInfo
+		r.GET("/networkinfo", networkInfo)              // networkInfo
 		r.GET("/txid/:id", blockchainTxInfo)            // txid
 		r.GET("/mempool", mempoolContents)              // mempool contents
 		r.GET("/mempoolstats", getMempoolInfo)          // get mempool stats
