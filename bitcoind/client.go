@@ -244,7 +244,7 @@ type (
 		CurrentBlockWeight      int64   `json:"currentblockweight"`
 		CurrentBlockTransaction int64   `json:"currentblocktx"`
 		Difficulty              float64 `json:"difficulty"`
-		NetworkHashPs           int64   `json:"networkhashps"`
+		NetworkHashPs           float64 `json:"networkhashps"`
 		PooledTransaction       int64   `json:"pooledtx"`
 		Chain                   string  `json:"chain"`
 		Warnings                string  `json:"warnings"`
