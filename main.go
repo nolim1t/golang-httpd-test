@@ -42,12 +42,12 @@ type (
 		BlockchainInfo() (bitcoind.BlockchainInfoResponse, error)
 		NetworkInfo() (bitcoind.NetworkInfoResponse, error)
 		GetTransactionInfo(string) (bitcoind.VerboseTransactionInfo, error)
-		GetMempoolContents() (mempoolcontents []string, err error)
-		PushTransaction(hex string) (txid string, err error)
-		GetBestBlockHash() (blockhash string, err error)
-		GetBlockHashByHeight(height int64) (blockhash string, err error)
-		GetBlock(hash string) (blockinfo bitcoind.BitcoinBlockResponse, err error)
-		GetMempoolInfo() (mempoolinfo bitcoind.MempoolInfoResponse, err error)
+		GetMempoolContents() ([]string, error)
+		PushTransaction(hex string) (string, error)
+		GetBestBlockHash() (string, error)
+		GetBlockHashByHeight(height int64) (string, error)
+		GetBlock(hash string) (bitcoind.BitcoinBlockResponse, error)
+		GetMempoolInfo() (bitcoind.MempoolInfoResponse, error)
 	}
 )
 
