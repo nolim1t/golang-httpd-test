@@ -31,9 +31,10 @@ type (
                 GetMempoolContents() (mempoolcontents []string, err error)
                 PushTransaction(hex string) (txid string, err error)
                 GetBestBlockHash() (blockhash string, err error)
-                GetBlockHashByHeight(height int64) (blockhash string, err error)
-                GetBlock(hash string) (bitcoind.BitcoinBlockResponse, err error)
-                GetMempoolInfo() (mempoolinfo bitcoind.MempoolInfoResponse, err error)
+                GetBlockHashByHeight(height int64) (string, error)
+                GetBlock(hash string) (bitcoind.BitcoinBlockResponse, error)
+                GetMempoolInfo() (bitcoind.MempoolInfoResponse, error)
+                GetMiningInfo() (bitcoind.MiningInfoResponse, error)
         }
 )
 
@@ -96,6 +97,7 @@ const (
 	MethodGetBestBlock    = "getbestblockhash"
 	MethodGetHashByHeight = "getblockhash"
 	MethodGetMempool      = "getmempoolinfo"
+	MethodGetMiningInfo   = "getmininginfo"
 
 	Bech32 = "bech32"
 )
@@ -236,6 +238,17 @@ type (
 		LocalAddresses  []AddressList `json:"localaddresses"`
 		Warnings        string        `json:"warnings"`
 	}
+	// getmininginfo
+	MiningInfoResponse struct {
+		Blocks                  int64   `json:"blocks"`
+		CurrentBlockWeight      int64   `json:"currentblockweight"`
+		CurrentBlockTransaction int64   `json:"currentblocktx"`
+		Difficulty              float64 `json:"difficulty"`
+		NetworkHashPs           int64   `json:"networkhashps"`
+		PooledTransaction       int64   `json:"pooledtx"`
+		Chain                   string  `json:"chain"`
+		Warnings                string  `json:"warnings"`
+	}
 )
 
 // Methods
@@ -343,6 +356,16 @@ func (b Bitcoind) GetBlock(hash string) (blockinfo BitcoinBlockResponse, err err
 	}
 	err = json.Unmarshal(res, &blockinfo)
 
+	return
+}
+
+// GetMiningInfo
+func (b Bitcoind) GetMiningInfo() (mininginfo MiningInfoResponse, err error) {
+	res, err := b.sendRequest(MethodGetMiningInfo)
+	if err != nil {
+		return
+	}
+	err = json.Unmarshal(res, &mininginfo)
 	return
 }
 
