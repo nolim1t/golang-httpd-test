@@ -19,6 +19,14 @@ type (
 		Bitcoind Bitcoind `toml:"bitcoind"`
 		// auth-scheme key
 		AuthScheme string `toml:"auth-scheme" default:"none"` // either use omitempty or default (https://godoc.org/github.com/pelletier/go-toml)
+		// [jwt] section
+		JwtConfig JwtConfig `toml:"jwt"`
+	}
+
+	// JWT scheme struct
+	JwtConfig struct {
+		PrivKeyStore string `toml:"private-key-store`
+		PubKeyStore  string `toml:"public-key-store"`
 	}
 	// Bitcoind config (enter some default values)
 	// NOTE: Keep in mind that this is **not yet encrypted**, so best to keep it _local_
