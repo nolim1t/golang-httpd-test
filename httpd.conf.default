@@ -1,8 +1,10 @@
 port = 8080
 log-file = "~/.lncm/httpd.log"
 
+# set to 'true' to use the bitcoin endpoints
 bitcoin-client = false
 
+# set to 'jwt' to use auth scheme. Can also omit this
 auth-scheme = "none"
 
 [bitcoind]
@@ -11,4 +13,7 @@ port = 8332
 user = "lncm"
 pass = "password"
 
-
+# If 'auth-scheme' = JWT
+[jwt]
+private-key-store = "/path/to/private/key/store"
+public-key-store = "/path/to/public/key/store"
