@@ -10,11 +10,11 @@ import (
 type (
 	Config struct {
 		// Port the service will run on
-		Port                    int64  `toml:"port"`       // the port to run on
-		StaticDir               string `toml:"static-dir"` // Where index.html lives
-		LogFile                 string `toml:"log-file"`   // logfile to log
-		DisablePinephoneBinding bool   `toml:"disable-pinephone-binding"`
-		BitcoinClient           bool   `toml:"bitcoin-client"`
+		Port                    int64  `toml:"port" default:8080`                       // the port to run on
+		StaticDir               string `toml:"static-dir" default:"~/public_html"`      // Where index.html lives (Default: $HOME/public_html)
+		LogFile                 string `toml:"log-file" default:"~/http.log"`           // logfile to log (Default: ~/http.log)
+		DisablePinephoneBinding bool   `toml:"disable-pinephone-binding" default:false` // disable-pinephone-binding=false
+		BitcoinClient           bool   `toml:"bitcoin-client" default:true`             // bitcoin-client=true
 		// [bitcoind] section in the `--config` file that defines Bitcoind's setup
 		Bitcoind Bitcoind `toml:"bitcoind"`
 		// auth-scheme key
