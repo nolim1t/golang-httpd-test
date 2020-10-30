@@ -3,6 +3,8 @@ log-file = "~/.lncm/httpd.log"
 
 bitcoin-client = false
 
+auth-scheme = "none"
+
 [bitcoind]
 host = "localhost"
 port = 8332
