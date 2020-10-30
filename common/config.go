@@ -20,13 +20,13 @@ type (
 		// auth-scheme key
 		AuthScheme string `toml:"auth-scheme" default:"none"` // either use omitempty or default (https://godoc.org/github.com/pelletier/go-toml)
 	}
-	// Bitcoind config
+	// Bitcoind config (enter some default values)
 	// NOTE: Keep in mind that this is **not yet encrypted**, so best to keep it _local_
 	Bitcoind struct {
 		Host string `toml:"host" default:"localhost"`
-		Port int64  `toml:"port"`
-		User string `toml:"user"`
-		Pass string `toml:"pass"`
+		Port int64  `toml:"port" default:8332`
+		User string `toml:"user" default:"lncm"`
+		Pass string `toml:"pass" default:"lncmrocks"`
 	}
 )
 
