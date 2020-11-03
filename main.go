@@ -22,6 +22,7 @@ import (
 	// mine
 	"gitlab.com/nolim1t/golang-httpd-test/bitcoind"
 	"gitlab.com/nolim1t/golang-httpd-test/common"
+	"gitlab.com/nolim1t/golang-httpd-test/jwt"
 	"gitlab.com/nolim1t/golang-httpd-test/pineclient"
 
 	// github
@@ -126,6 +127,40 @@ func info(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"message": "pong",
 	})
+}
+
+// JWT Endpoints
+// Sign in
+func signin(c *gin.Context) {
+	if c.GetHeader("JWT") != "" {
+		validate_key, err := jwt.ValidateKey(conf.JWTConfig.PrivKeyStore, c.GetHeader("JWT"))
+		if validate_key == "valid" {
+			c.JSON(200, gin.H{
+				"message":   "OK",
+				"signed_in": true,
+			})
+		} else {
+			c.JSON(200, gin.H{
+				"message":   fmt.Sprintf("Sign in token not valid: %s", err),
+				"signed_in": false,
+			})
+		}
+		return
+	} else {
+		fmt.Println("No JWT Header set, lets validate username and password")
+	}
+	if c.PostForm("username") != "" && c.PostForm("password") != "" {
+		// todo: validate username and password
+		var signed_key string = jwt.SignKey(conf.JWTConfig.PrivKeyStore, c.PostForm("username"))
+		c.JSON(200, gin.H{
+			"message": "OK",
+			"jwt":     signed_key,
+		})
+	} else {
+		c.JSON(401, gin.H{
+			"message": "Please specify a 'username' and 'password'",
+		})
+	}
 }
 
 // Bitcoin endpoints
@@ -379,6 +414,10 @@ func main() {
 		r.GET("/block/:id", getBlock)                   // getBlock
 	} else {
 		fmt.Println("Bitcoin client not enabled")
+	}
+	if conf.AuthScheme == "JWT" {
+		fmt.Println("Authentication endpoints")
+		r.POST("login", signin) // Signin Endpoint
 	}
 	// Pinephone stuff
 	r.GET("/batteryStatus", batStatus)
