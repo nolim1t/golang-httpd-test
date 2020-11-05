@@ -14,6 +14,8 @@ import (
 	// System Libraries
 	"flag"
 	"fmt"
+	//"io/ioutil"
+	//"net/http"
 	"os"
 	"path"
 	"strconv"
@@ -21,6 +23,7 @@ import (
 	// External libraries
 	// mine
 	"gitlab.com/nolim1t/golang-httpd-test/bitcoind"
+	"gitlab.com/nolim1t/golang-httpd-test/btcprice"
 	"gitlab.com/nolim1t/golang-httpd-test/common"
 	"gitlab.com/nolim1t/golang-httpd-test/jwt"
 	"gitlab.com/nolim1t/golang-httpd-test/pineclient"
@@ -386,6 +389,19 @@ func testQueryString(c *gin.Context) {
 	}
 }
 
+// BTC Price
+func getBtcPrice(c *gin.Context) {
+	price, err := btcprice.GetPriceFeed(conf)
+	if err != nil {
+		c.JSON(500, gin.H{
+			"message": fmt.Sprintf("Error reading price: %s", err),
+		})
+	} else {
+		// return string (GetPriceFeed actually returns []byte
+		c.String(200, string(price))
+	}
+}
+
 // Main entrypoint
 func main() {
 	router := gin.Default()
@@ -412,6 +428,8 @@ func main() {
 		r.GET("/getblockhash", getBestBlockHash)        // Get best blockhash
 		r.GET("/blockheight/:id", getBlockHashByHeight) // get blockhash by height
 		r.GET("/block/:id", getBlock)                   // getBlock
+		// BTC Price API
+		r.GET("/btcprice", getBtcPrice)
 	} else {
 		fmt.Println("Bitcoin client not enabled")
 	}

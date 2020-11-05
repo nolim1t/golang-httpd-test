@@ -7,6 +7,10 @@ bitcoin-client = false
 # set to 'JWT' to use auth scheme. Can also omit this
 auth-scheme = "none"
 
+# Price feed URL
+# BTC price feed (Default to "https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=THB,USD,EUR)
+#btc-price-feed = ""
+
 [bitcoind]
 host = "localhost"
 port = 8332

@@ -10,11 +10,13 @@ import (
 type (
 	Config struct {
 		// Port the service will run on
-		Port                    int64  `toml:"port" default:8080`                       // the port to run on
-		StaticDir               string `toml:"static-dir" default:"~/public_html"`      // Where index.html lives (Default: $HOME/public_html)
-		LogFile                 string `toml:"log-file" default:"~/http.log"`           // logfile to log (Default: ~/http.log)
-		DisablePinephoneBinding bool   `toml:"disable-pinephone-binding" default:false` // disable-pinephone-binding=false
-		BitcoinClient           bool   `toml:"bitcoin-client" default:true`             // bitcoin-client=true
+		Port                    int64  `toml:"port" default:8080`                                                                                // the port to run on
+		StaticDir               string `toml:"static-dir" default:"~/public_html"`                                                               // Where index.html lives (Default: $HOME/public_html)
+		LogFile                 string `toml:"log-file" default:"~/http.log"`                                                                    // logfile to log (Default: ~/http.log)
+		DisablePinephoneBinding bool   `toml:"disable-pinephone-binding" default:false`                                                          // disable-pinephone-binding=false
+		BitcoinClient           bool   `toml:"bitcoin-client" default:true`                                                                      // bitcoin-client=true
+		BtcPriceApi             string `toml:"btc-price-feed" default:"https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=THB,USD,EUR"` // btc-price-feed (Default: https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=THB,USD,EUR)
+
 		// [bitcoind] section in the `--config` file that defines Bitcoind's setup
 		Bitcoind Bitcoind `toml:"bitcoind"`
 		// auth-scheme key
