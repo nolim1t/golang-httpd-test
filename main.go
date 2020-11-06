@@ -54,6 +54,7 @@ type (
 		GetMempoolInfo() (bitcoind.MempoolInfoResponse, error)
 		GetMiningInfo() (bitcoind.MiningInfoResponse, error)
 		GetPeerInfo() ([]bitcoind.PeerInfo, error)
+		GetBlockStats(int64) (bitcoind.BlockStatsResponse, error)
 	}
 )
 
@@ -318,6 +319,27 @@ func getBlock(c *gin.Context) {
 		"block":   bitcoinblock,
 	})
 }
+func getBlockStats(c *gin.Context) {
+	// GetBlockStats(int64) (bitcoind.BlockStatsResponse, error)
+	blockHeight, blockIdErr := strconv.ParseInt(c.Param("id"), 10, 64)
+	if blockIdErr != nil {
+		c.JSON(500, gin.H{
+			"message": fmt.Sprintf("Error converting param to block height: %s", blockIdErr),
+		})
+		return
+	}
+	blockstats, err := btcClient.GetBlockStats(blockHeight)
+	if err != nil {
+		c.JSON(500, gin.H{
+			"message": fmt.Sprintf("Error getting block stats: %s", err),
+		})
+		return
+	}
+	c.JSON(200, gin.H{
+		"message":    "OK",
+		"blockstats": blockstats,
+	})
+}
 
 // mempool info
 func getMempoolInfo(c *gin.Context) {
@@ -428,6 +450,7 @@ func main() {
 		r.GET("/getblockhash", getBestBlockHash)        // Get best blockhash
 		r.GET("/blockheight/:id", getBlockHashByHeight) // get blockhash by height
 		r.GET("/block/:id", getBlock)                   // getBlock
+		r.GET("/blockstats/:id", getBlockStats)         // getBlockStats
 		// BTC Price API
 		r.GET("/btcprice", getBtcPrice)
 	} else {
