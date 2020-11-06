@@ -36,6 +36,7 @@ type (
                 GetMempoolInfo() (bitcoind.MempoolInfoResponse, error)
                 GetMiningInfo() (bitcoind.MiningInfoResponse, error)
                 GetPeerInfo() ([]PeerInfo, error)
+                GetBlockStats(int64) (bitcoind.BlockStatsResponse, error)
         }
 )
 
@@ -100,6 +101,7 @@ const (
 	MethodGetMempool      = "getmempoolinfo"
 	MethodGetMiningInfo   = "getmininginfo"
 	MethodGetPeerInfo     = "getpeerinfo"
+	MethodGetBlockStats   = "getblockstats"
 
 	Bech32 = "bech32"
 )
@@ -281,9 +283,48 @@ type (
 		WhiteListed    bool     `json:"whitelisted"`
 		MinFeeFilter   float64  `json:"minfeefilter"`
 	}
+	BlockStatsResponse struct {
+		AvgFee        int64   `json:"avgfee"`
+		AvgFeeRate    int64   `json:"avgfeerate"`
+		AvgFeeSize    int64   `json:"avgfeesize"`
+		Blockhash     string  `json:"blockhash"`
+		FeeRates      []int64 `json:"feerate_percentiles"`
+		Height        int64   `json:"height"`
+		Ins           int64   `json:"ins"`
+		MaxFee        int64   `json:"maxfee"`
+		MaxFeeRate    int64   `json:"maxfeerate"`
+		MaxTxSize     int64   `json:"maxtxsize"`
+		MedianFee     int64   `json:"medianfee"`
+		MedianTime    int64   `json:"mediantime"`
+		MedianTxSize  int64   `json:"mediantxsize"`
+		MinFee        int64   `json:"minfee"`
+		MinFeeRate    int64   `json:"minfeerate"`
+		MinTxSize     int64   `json:"mintxsize"`
+		Outs          int64   `json:"outs"`
+		Subsidy       int64   `json:"subsidy"`
+		SWTotalSize   int64   `json:"swtotal_size"`
+		SWTotalWeight int64   `json:"swtotal_weight"`
+		SWTxs         int64   `json:"swtxs"`
+		Time          int64   `json:"time"`
+		TotalOut      int64   `json:"total_out"`
+		TotalSize     int64   `json:"total_size"`
+		TotalWeight   int64   `json:"total_weight"`
+		TotalFee      int64   `json:"total_fee"`
+		Txs           int64   `json:"txs"`
+		UTXOIncrease  int64   `json:"utxo_increase"`
+		UTXOSizeInc   int64   `json:"utxo_size_inc"`
+	}
 )
 
 // Methods
+// GetBlockstats
+func (b Bitcoind) GetBlockStats(height int64) (blockstats BlockStatsResponse, err error) {
+	res, _ := b.sendRequest(MethodGetBlockStats, height)
+	err = json.Unmarshal(res, &blockstats)
+
+	return
+}
+
 // BlockCount
 func (b Bitcoind) BlockCount() (count int64, err error) {
 	res, _ := b.sendRequest(MethodGetBlockCount)
