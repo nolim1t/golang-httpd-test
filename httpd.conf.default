@@ -3,6 +3,8 @@ log-file = "~/.lncm/httpd.log"
 
 # set to 'true' to use the bitcoin endpoints
 bitcoin-client = false
+# set to 'true' to use lnd endpoints
+lnd-client = false
 
 # set to 'JWT' to use auth scheme. Can also omit this
 auth-scheme = "none"
