@@ -15,7 +15,7 @@ type (
 		LogFile                 string `toml:"log-file" default:"~/http.log"`           // logfile to log (Default: ~/http.log)
 		DisablePinephoneBinding bool   `toml:"disable-pinephone-binding" default:false` // disable-pinephone-binding=false
 		BitcoinClient           bool   `toml:"bitcoin-client" default:true`             // bitcoin-client=true
-		LndClient               bool   `toml:"lnd-client" default:true`
+		LndClient               bool   `toml:"lnd-client" default:false`
 		BtcPriceApi             string `toml:"btc-price-feed" default:"https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=THB,USD,EUR"` // btc-price-feed (Default: https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=THB,USD,EUR)
 
 		// [bitcoind] section in the `--config` file that defines Bitcoind's setup
@@ -46,8 +46,8 @@ type (
 	Lnd struct {
 		Host         string `toml:"host" default:"localhost"`
 		Port         int64  `toml:"port" default:10009`
-		TlsFile      string `toml:"tls-file"`
-		MacaroonFile string `toml:"macaroon-file"`
+		TlsFile      string `toml:"tls-file" default:"/lnd/tls.cert"`
+		MacaroonFile string `toml:"macaroon-file" default:"/lnd/data/chain/bitcoin/mainnet/admin.macaroon"`
 		RestartCount int64  `toml:"restart-count" default:3`
 	}
 )
