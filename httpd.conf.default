@@ -13,17 +13,20 @@ auth-scheme = "none"
 # BTC price feed (Default to "https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=THB,USD,EUR)
 #btc-price-feed = ""
 
+# Bitcoin configurables
 [bitcoind]
 host = "localhost"
 port = 8332
 user = "lncm"
 pass = "password"
 
+# LND Configurables
 [lnd]
 host = "localhost"
 port = 10009
 tls-file = "/lnd/tls.cert"
 macaroon-file = "/lnd/data/chain/bitcoin/mainnet/admin.macaroon"
+restart-count = 3
 
 # If 'auth-scheme' = JWT
 [jwt]
