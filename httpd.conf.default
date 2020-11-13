@@ -17,6 +17,12 @@ port = 8332
 user = "lncm"
 pass = "password"
 
+[lnd]
+host = "localhost"
+port = 10009
+tls-file = "/lnd/tls.cert"
+macaroon-file = "/lnd/data/chain/bitcoin/mainnet/admin.macaroon"
+
 # If 'auth-scheme' = JWT
 [jwt]
 private-key-store = "/path/to/private/key/store"
