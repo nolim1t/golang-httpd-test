@@ -10,15 +10,18 @@ import (
 type (
 	Config struct {
 		// Port the service will run on
-		Port                    int64  `toml:"port" default:8080`                                                                                // the port to run on
-		StaticDir               string `toml:"static-dir" default:"~/public_html"`                                                               // Where index.html lives (Default: $HOME/public_html)
-		LogFile                 string `toml:"log-file" default:"~/http.log"`                                                                    // logfile to log (Default: ~/http.log)
-		DisablePinephoneBinding bool   `toml:"disable-pinephone-binding" default:false`                                                          // disable-pinephone-binding=false
-		BitcoinClient           bool   `toml:"bitcoin-client" default:true`                                                                      // bitcoin-client=true
+		Port                    int64  `toml:"port" default:8080`                       // the port to run on
+		StaticDir               string `toml:"static-dir" default:"~/public_html"`      // Where index.html lives (Default: $HOME/public_html)
+		LogFile                 string `toml:"log-file" default:"~/http.log"`           // logfile to log (Default: ~/http.log)
+		DisablePinephoneBinding bool   `toml:"disable-pinephone-binding" default:false` // disable-pinephone-binding=false
+		BitcoinClient           bool   `toml:"bitcoin-client" default:true`             // bitcoin-client=true
+		LndClient               bool   `toml:"lnd-client" default:true`
 		BtcPriceApi             string `toml:"btc-price-feed" default:"https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=THB,USD,EUR"` // btc-price-feed (Default: https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=THB,USD,EUR)
 
 		// [bitcoind] section in the `--config` file that defines Bitcoind's setup
 		Bitcoind Bitcoind `toml:"bitcoind"`
+		Lnd      Lnd      `toml:"lnd"` // LND  client
+
 		// auth-scheme key
 		AuthScheme string `toml:"auth-scheme" default:"none"` // either use omitempty or default (https://godoc.org/github.com/pelletier/go-toml)
 		// [jwt] section
@@ -37,6 +40,14 @@ type (
 		Port int64  `toml:"port" default:8332`
 		User string `toml:"user" default:"lncm"`
 		Pass string `toml:"pass" default:"lncmrocks"`
+	}
+
+	// Lnd config
+	Lnd struct {
+		Host         string `toml:"host" default:"localhost"`
+		Port         string `toml:"port" default:"10009"`
+		TlsFile      string `toml:"tls-file"`
+		MacaroonFile string `toml:"macaroon-file"`
 	}
 )
 
