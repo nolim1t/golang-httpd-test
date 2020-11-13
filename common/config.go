@@ -45,7 +45,7 @@ type (
 	// Lnd config
 	Lnd struct {
 		Host         string `toml:"host" default:"localhost"`
-		Port         string `toml:"port" default:"10009"`
+		Port         int64  `toml:"port" default:"10009"`
 		TlsFile      string `toml:"tls-file"`
 		MacaroonFile string `toml:"macaroon-file"`
 	}
