@@ -19,9 +19,55 @@ import (
 	"gopkg.in/macaroon.v2"
 )
 
+type (
+	LndInfo struct {
+		Alias string   `json:"alias"`
+		Uris  []string `json:"uris"`
+	}
+)
+
+// Client struct
+type LndClient interface {
+	Info(context.Context) (LndInfo, error)
+}
+
 // Config struct
 type Lnd struct {
 	adminClient lnrpc.LightningClient
+}
+
+func (lnd Lnd) Info(ctx context.Context) (info LndInfo, err error) {
+	i, err := lnd.adminClient.GetInfo(ctx, &lnrpc.GetInfoRequest{})
+	if err != nil {
+		fmt.Printf("Error: %s", err)
+		return
+	}
+	// Return Info
+	fmt.Printf("Info() result: %s / %s", i.GetAlias(), i.GetUris())
+	return LndInfo{Alias: i.GetAlias(), Uris: i.GetUris()}, nil
+}
+
+// Check connection
+func (lnd Lnd) checkConnectionStatus() {
+	failures := 0
+	for {
+		failures++
+
+		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+		_, err := lnd.Info(ctx)
+		if err == nil {
+			if failures > 1 {
+				fmt.Sprintln("lnd connection re-established")
+			}
+			failures = 0
+		}
+		cancel()
+
+		if failures > 0 {
+			fmt.Sprintln("lnd unreachable")
+		}
+		time.Sleep(time.Minute)
+	}
 }
 
 // Start function
@@ -72,7 +118,7 @@ func startClient(conf common.LndConfig) (c Lnd, err error) {
 		adminClient: adminClient,
 	}
 
-	//go c.checkConnectionStatus()
+	go c.checkConnectionStatus()
 
 	return c, nil
 }

@@ -12,8 +12,10 @@ OTHER DEALINGS IN THE SOFTWARE.
 */
 import (
 	// System Libraries
+	"context"
 	"flag"
 	"fmt"
+	//"time"
 	//"io/ioutil"
 	//"net/http"
 	"os"
@@ -57,6 +59,9 @@ type (
 		GetPeerInfo() ([]bitcoind.PeerInfo, error)
 		GetBlockStats(int64) (bitcoind.BlockStatsResponse, error)
 	}
+	LndClient interface {
+		Info(context.Context) (lnd.LndInfo, error)
+	}
 )
 
 // Globals
@@ -65,7 +70,7 @@ var (
 	// Accessing bitcoinclient
 	btcClient BitcoinClient
 	// Accessing lndClient
-	lndClient LightningClient
+	lndClient LndClient
 
 	conf           common.Config
 	showVersion    = flag.Bool("version", false, "Show version and exit")
@@ -132,14 +137,27 @@ func init() {
 		if err != nil {
 			panic(err)
 		}
+		fmt.Printf("Initializing Lightning Client... \n%s\n", lndClient)
+
 	}
 }
 
 // Test endpoint
 func info(c *gin.Context) {
-	c.JSON(200, gin.H{
-		"message": "pong",
-	})
+	if conf.LndClient {
+		info, err := lndClient.Info(c)
+		if err != nil {
+			c.JSON(500, gin.H{
+				"message": "An error has occured",
+			})
+			return
+		}
+		c.JSON(200, info)
+	} else {
+		c.JSON(200, gin.H{
+			"message": "pong",
+		})
+	}
 }
 
 // JWT Endpoints
