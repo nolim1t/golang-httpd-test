@@ -20,6 +20,7 @@ Eventually, I'd like to use this for querying external based libraries (such as 
 - `pineclient` : contains the pineclient package for reading stuff from the PINEphone.
 - `bitcoind` : contains bitcoind client package for reading bitcoind
 - `btcprice` : contains btc price utilities
+- `lnd` : contains lnd-client
 - `go.mod` : contains a list of all the go modules and defines the base package name.
 - `main.go` : Defines the entry point which binds all the modules together.
 
