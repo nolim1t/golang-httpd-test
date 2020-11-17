@@ -151,7 +151,7 @@ func info(c *gin.Context) {
 			})
 			return
 		}
-		// if all ok
+		// if all ok (Return whats in here)
 		c.JSON(200, info)
 	} else {
 		c.JSON(200, gin.H{

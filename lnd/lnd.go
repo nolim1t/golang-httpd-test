@@ -21,8 +21,18 @@ import (
 
 type (
 	LndInfo struct {
-		Alias string   `json:"alias"`
-		Uris  []string `json:"uris"`
+		Version             string   `json:"version"`
+		CommitHash          string   `json:"commit_hash"`
+		PubKey              string   `json:"identity_pubkey"`
+		Alias               string   `json:"alias"`
+		Color               string   `json:"color"`
+		Peers               uint32   `json:"num_peers"`
+		BlockHeight         uint32   `json:"block_height"`
+		BlockHash           string   `json:"block_hash"`
+		BestHeaderTimestamp int64    `json:"best_header_timestamp"`
+		SyncedChain         bool     `json:"synced_to_chain"`
+		SyncedGraph         bool     `json:"synced_to_graph"`
+		Uris                []string `json:"uris"`
 	}
 )
 
@@ -42,9 +52,21 @@ func (lnd Lnd) Info(ctx context.Context) (info LndInfo, err error) {
 		fmt.Printf("Error: %s", err)
 		return
 	}
-	// Return Info
-	fmt.Printf("Info() result: %s / %s", i.GetAlias(), i.GetUris())
-	return LndInfo{Alias: i.GetAlias(), Uris: i.GetUris()}, nil
+	// Return Info (see https://github.com/lightningnetwork/lnd/blob/master/lnrpc/rpc.pb.go#L4279)
+	fmt.Printf("Info() raw result: %s ", i)
+	return LndInfo{
+		Version:             i.GetVersion(),
+		CommitHash:          i.CommitHash,
+		PubKey:              i.GetIdentityPubkey(),
+		Alias:               i.GetAlias(),
+		Color:               i.Color,
+		Peers:               i.NumPeers,
+		BlockHeight:         i.BlockHeight,
+		BlockHash:           i.BlockHash,
+		BestHeaderTimestamp: i.BestHeaderTimestamp,
+		SyncedChain:         i.SyncedToChain,
+		Uris:                i.GetUris(),
+	}, nil
 }
 
 // Check connection
