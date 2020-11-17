@@ -26,6 +26,7 @@ import (
 	"gitlab.com/nolim1t/golang-httpd-test/btcprice"
 	"gitlab.com/nolim1t/golang-httpd-test/common"
 	"gitlab.com/nolim1t/golang-httpd-test/jwt"
+	"gitlab.com/nolim1t/golang-httpd-test/lnd"
 	"gitlab.com/nolim1t/golang-httpd-test/pineclient"
 
 	// github
@@ -63,6 +64,8 @@ var (
 	version, gitHash string
 	// Accessing bitcoinclient
 	btcClient BitcoinClient
+	// Accessing lndClient
+	lndClient LightningClient
 
 	conf           common.Config
 	showVersion    = flag.Bool("version", false, "Show version and exit")
@@ -120,6 +123,12 @@ func init() {
 	// if bitcoin client enabled
 	if conf.BitcoinClient {
 		btcClient, err = bitcoind.New(conf.Bitcoind)
+		if err != nil {
+			panic(err)
+		}
+	}
+	if conf.LndClient {
+		lndClient, err := lnd.Start(conf.LndConfig)
 		if err != nil {
 			panic(err)
 		}

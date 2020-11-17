@@ -2,9 +2,14 @@ package lnd
 
 import (
 	"context"
+	"encoding/hex"
+	"fmt"
+	"io/ioutil"
+	"time"
 	// LND Client
-	"github.com/lightninglabs/lndclient"
-
+	//"github.com/lightninglabs/lndclient"
+	// LN RPC
+	"github.com/lightningnetwork/lnd/lnrpc"
 	// Internals
 	"gitlab.com/nolim1t/golang-httpd-test/common"
 
@@ -15,12 +20,42 @@ import (
 )
 
 // Config struct
-type LndStruct struct {
+type Lnd struct {
 	adminClient lnrpc.LightningClient
 }
 
+// Start function
+func Start(conf common.LndConfig) (Lnd, error) {
+	return startClient(conf)
+}
+
+// Get Client
+func getClient(transportCredentials credentials.TransportCredentials, fullHostname, file string) lnrpc.LightningClient {
+	macaroonBytes, err := ioutil.ReadFile(file)
+	if err != nil {
+		panic(fmt.Sprintln("Cannot read macaroon file", err))
+	}
+	mac := &macaroon.Macaroon{}
+	if err = mac.UnmarshalBinary(macaroonBytes); err != nil {
+		panic(fmt.Sprintln("Cannot unmarshal macaroon", err))
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	connection, err := grpc.DialContext(ctx, fullHostname, []grpc.DialOption{
+		grpc.WithBlock(),
+		grpc.WithTransportCredentials(transportCredentials),
+		grpc.WithPerRPCCredentials(newCreds(macaroonBytes)),
+	}...)
+	if err != nil {
+		panic(fmt.Errorf("unable to connect to %s: %w", fullHostname, err))
+	}
+
+	return lnrpc.NewLightningClient(connection)
+}
+
 // Start Client
-func startClient(conf common.Lnd) (c Lnd, err error) {
+func startClient(conf common.LndConfig) (c Lnd, err error) {
 	conf.TlsFile = common.CleanAndExpandPath(conf.TlsFile)
 	conf.MacaroonFile = common.CleanAndExpandPath(conf.MacaroonFile)
 
@@ -31,19 +66,13 @@ func startClient(conf common.Lnd) (c Lnd, err error) {
 	}
 	hostname := fmt.Sprintf("%s:%d", conf.Host, conf.Port)
 
-	adminClient := getClient(transportCredentials, conf.Host, conf.MacaroonFile)
-
-	notifier, err := NewNotifier(adminClient)
-	if err != nil {
-		return c, err
-	}
+	adminClient := getClient(transportCredentials, hostname, conf.MacaroonFile)
 
 	c = Lnd{
 		adminClient: adminClient,
-		notifier:    notifier,
 	}
 
-	go c.checkConnectionStatus()
+	//go c.checkConnectionStatus()
 
 	return c, nil
 }

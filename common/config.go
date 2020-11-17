@@ -19,8 +19,8 @@ type (
 		BtcPriceApi             string `toml:"btc-price-feed" default:"https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=THB,USD,EUR"` // btc-price-feed (Default: https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=THB,USD,EUR)
 
 		// [bitcoind] section in the `--config` file that defines Bitcoind's setup
-		Bitcoind Bitcoind `toml:"bitcoind"`
-		Lnd      Lnd      `toml:"lnd"` // LND  client
+		Bitcoind  Bitcoind  `toml:"bitcoind"`
+		LndConfig LndConfig `toml:"lnd"` // LND  client
 
 		// auth-scheme key
 		AuthScheme string `toml:"auth-scheme" default:"none"` // either use omitempty or default (https://godoc.org/github.com/pelletier/go-toml)
@@ -43,7 +43,7 @@ type (
 	}
 
 	// Lnd config
-	Lnd struct {
+	LndConfig struct {
 		Host         string `toml:"host" default:"localhost"`
 		Port         int64  `toml:"port" default:10009`
 		TlsFile      string `toml:"tls-file" default:"/lnd/tls.cert"`
