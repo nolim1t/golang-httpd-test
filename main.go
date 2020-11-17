@@ -60,7 +60,7 @@ type (
 		GetBlockStats(int64) (bitcoind.BlockStatsResponse, error)
 	}
 	LndClient interface {
-		Info(context.Context) (lnd.LndInfo, error)
+		Info(ctx context.Context) (lnd.LndInfo, error)
 	}
 )
 
@@ -69,6 +69,7 @@ var (
 	version, gitHash string
 	// Accessing bitcoinclient
 	btcClient BitcoinClient
+
 	// Accessing lndClient
 	lndClient LndClient
 
@@ -133,12 +134,10 @@ func init() {
 		}
 	}
 	if conf.LndClient {
-		lndClient, err := lnd.Start(conf.LndConfig)
+		lndClient, err = lnd.Start(conf.LndConfig)
 		if err != nil {
 			panic(err)
 		}
-		fmt.Printf("Initializing Lightning Client... \n%s\n", lndClient)
-
 	}
 }
 
@@ -148,10 +147,11 @@ func info(c *gin.Context) {
 		info, err := lndClient.Info(c)
 		if err != nil {
 			c.JSON(500, gin.H{
-				"message": "An error has occured",
+				"message": fmt.Errorf("can't get info from LN node: %w", err).Error(),
 			})
 			return
 		}
+		// if all ok
 		c.JSON(200, info)
 	} else {
 		c.JSON(200, gin.H{
